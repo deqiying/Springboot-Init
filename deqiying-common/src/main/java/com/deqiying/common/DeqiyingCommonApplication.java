@@ -1,4 +1,4 @@
-package com.qiying.common;
+package com.deqiying.common;
 
 
 public class DeqiyingCommonApplication {

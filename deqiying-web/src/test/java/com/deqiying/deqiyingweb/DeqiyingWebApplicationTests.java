@@ -1,4 +1,4 @@
-package com.qiying.deqiyingweb;
+package com.deqiying.deqiyingweb;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
