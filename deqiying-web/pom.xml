@@ -9,7 +9,6 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.qiying</groupId>
     <artifactId>deqiying-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>deqiying-web</name>
