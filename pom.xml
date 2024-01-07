@@ -19,6 +19,7 @@
     <modules>
         <module>deqiying-common</module>
         <module>deqiying-web</module>
+        <module>deqiying-framework</module>
     </modules>
 
     <properties>
