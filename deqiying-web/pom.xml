@@ -38,6 +38,12 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--    系统模块    -->
+        <dependency>
+            <groupId>com.deqiying</groupId>
+            <artifactId>deqiying-framework</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
