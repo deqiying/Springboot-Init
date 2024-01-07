@@ -6,7 +6,7 @@
         <groupId>com.deqiying</groupId>
         <artifactId>Springboot-Init</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <artifactId>deqiying-common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -22,7 +22,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
 

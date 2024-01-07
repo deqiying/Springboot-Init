@@ -23,29 +23,33 @@
 
     <properties>
         <java.version>17</java.version>
+        <springboot.version>3.2.1</springboot.version>
     </properties>
+
+    <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>3.2.1</version>
+                <version>${springboot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+                <version>${springboot.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <optional>true</optional>
+                <version>${lombok.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>3.2.1</version>
-                <scope>test</scope>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>

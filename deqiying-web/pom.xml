@@ -6,7 +6,7 @@
         <groupId>com.deqiying</groupId>
         <artifactId>Springboot-Init</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
     <artifactId>deqiying-web</artifactId>
@@ -31,14 +31,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.2.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
 
