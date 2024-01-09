@@ -17,6 +17,7 @@ public enum ResultCode implements StatusCode {
     // 4000系列接口错误,
     BAD_REQUEST("A4000", "客户端请求的语法错误，服务器无法理解"),
     VALIDATE_ERROR("A4010", "参数校验失败"),
+    REQUIRED_ERROR("A4020", "缺少必要参数"),
     NOT_FOUND("A4004","未找到请求的资源"),
     METHOD_NOT_ALLOWED("A4005","请求方式错误，请检查后重试。"),
 
