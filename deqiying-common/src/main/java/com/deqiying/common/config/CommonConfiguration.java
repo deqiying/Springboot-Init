@@ -1,6 +1,8 @@
 package com.deqiying.common.config;
 
 
+import com.deqiying.common.utils.spring.SpringUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class CommonConfiguration {
-
+    @Bean
+    public SpringUtils springUtils() {
+        return new SpringUtils();
+    }
 
 }
