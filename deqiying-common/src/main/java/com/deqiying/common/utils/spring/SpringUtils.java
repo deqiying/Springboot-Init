@@ -1,5 +1,6 @@
 package com.deqiying.common.utils.spring;
 
+import com.deqiying.common.utils.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -126,7 +127,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static String getActiveProfile() {
         final String[] activeProfiles = getActiveProfiles();
-        return activeProfiles.length != 0 ? activeProfiles[0] : null;
+        return StringUtils.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
     }
 
     /**
