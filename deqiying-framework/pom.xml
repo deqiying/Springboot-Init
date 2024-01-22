@@ -32,6 +32,12 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- 通用模块 -->
+        <dependency>
+            <groupId>com.deqiying</groupId>
+            <artifactId>deqiying-common</artifactId>
+            <version>${deqiying.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

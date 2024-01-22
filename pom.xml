@@ -26,6 +26,7 @@
         <java.version>17</java.version>
         <springboot.version>3.2.1</springboot.version>
         <fastjson.version>2.0.45</fastjson.version>
+        <deqiying.version>0.0.1-SNAPSHOT</deqiying.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -66,6 +67,18 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <!-- 通用模块 -->
+            <dependency>
+                <groupId>com.deqiying</groupId>
+                <artifactId>deqiying-common</artifactId>
+                <version>${deqiying.version}</version>
+            </dependency>
+            <!--    系统模块    -->
+            <dependency>
+                <groupId>com.deqiying</groupId>
+                <artifactId>deqiying-framework</artifactId>
+                <version>${deqiying.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
