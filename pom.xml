@@ -25,13 +25,26 @@
     <properties>
         <java.version>17</java.version>
         <springboot.version>3.2.1</springboot.version>
-        <fastjson.version>2.0.45</fastjson.version>
         <deqiying.version>0.0.1-SNAPSHOT</deqiying.version>
+        <fastjson.version>2.0.45</fastjson.version>
+        <jodatime.version>2.12.6</jodatime.version>
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+            <!-- 通用模块 -->
+            <dependency>
+                <groupId>com.deqiying</groupId>
+                <artifactId>deqiying-common</artifactId>
+                <version>${deqiying.version}</version>
+            </dependency>
+            <!--    系统模块    -->
+            <dependency>
+                <groupId>com.deqiying</groupId>
+                <artifactId>deqiying-framework</artifactId>
+                <version>${deqiying.version}</version>
+            </dependency>
             <!-- SpringBoot的依赖配置-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -68,17 +81,11 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-            <!-- 通用模块 -->
+            <!-- 日期工具类 -->
             <dependency>
-                <groupId>com.deqiying</groupId>
-                <artifactId>deqiying-common</artifactId>
-                <version>${deqiying.version}</version>
-            </dependency>
-            <!--    系统模块    -->
-            <dependency>
-                <groupId>com.deqiying</groupId>
-                <artifactId>deqiying-framework</artifactId>
-                <version>${deqiying.version}</version>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${jodatime.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
