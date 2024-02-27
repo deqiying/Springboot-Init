@@ -110,9 +110,7 @@ public class ControllerExceptionAdvice {
         if (!e.getAllValidationResults().isEmpty()) {
             e.getAllValidationResults().forEach(validationResults -> {
                 List<MessageSourceResolvable> resolvableErrors = validationResults.getResolvableErrors();
-                resolvableErrors.forEach(errors -> {
-                    msgList.add(errors.getDefaultMessage());
-                });
+                resolvableErrors.forEach(errors -> msgList.add(errors.getDefaultMessage()));
             });
         }
         return ResultVO.build(ResultCode.VALIDATE_ERROR, msgList);
@@ -173,12 +171,12 @@ public class ControllerExceptionAdvice {
     /**
      * 处理其他异常,统一接口响应格式
      *
-     * @param e Exception
+     * @param e Throwable
      * @return ResultVO
      */
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResultVO<String> AllExceptionHandler(Exception e) {
+    public ResultVO<String> AllExceptionHandler(Throwable e) {
         log.error("未知异常：", e);
         return ResultVO.error(ResultCode.ERROR);
     }
