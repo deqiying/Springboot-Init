@@ -71,6 +71,13 @@
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${springboot.version}</version>
             </dependency>
+            <!-- 操作Redis-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>

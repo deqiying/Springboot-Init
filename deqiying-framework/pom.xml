@@ -15,6 +15,12 @@
     <description>deqiying-framework</description>
 
     <dependencies>
+        <!-- 通用模块 -->
+        <dependency>
+            <groupId>com.deqiying</groupId>
+            <artifactId>deqiying-common</artifactId>
+            <version>${deqiying.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -32,11 +38,10 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- 通用模块 -->
+        <!-- 操作Redis-->
         <dependency>
-            <groupId>com.deqiying</groupId>
-            <artifactId>deqiying-common</artifactId>
-            <version>${deqiying.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 
