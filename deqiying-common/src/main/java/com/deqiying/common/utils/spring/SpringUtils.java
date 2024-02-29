@@ -1,6 +1,7 @@
 package com.deqiying.common.utils.spring;
 
 import com.deqiying.common.utils.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * spring工具类 方便在非spring管理环境中获取bean
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  * @since 2024/1/13 22:53
  */
+@SuppressWarnings(value = {"unused", "unchecked"})
 @Component
 public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationContextAware {
     /**
@@ -67,6 +71,14 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static boolean containsBean(String name) {
         return beanFactory.containsBean(name);
+    }
+
+    /**
+     * 获取当前请求
+     * @return 当前请求
+     */
+    public static HttpServletRequest currentRequest() {
+        return ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
     }
 
     /**
