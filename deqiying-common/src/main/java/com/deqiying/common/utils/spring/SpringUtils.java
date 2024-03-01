@@ -1,7 +1,9 @@
 package com.deqiying.common.utils.spring;
 
 import com.deqiying.common.utils.StringUtils;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -74,11 +76,61 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
     }
 
     /**
+     * 获取当前请求属性
+     *
+     * @return 请求属性
+     */
+    public static ServletRequestAttributes currentAttributes() {
+        return (ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes());
+    }
+
+    /**
      * 获取当前请求
+     *
      * @return 当前请求
      */
     public static HttpServletRequest currentRequest() {
-        return ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        return currentAttributes().getRequest();
+    }
+
+    /**
+     * 获取当前请求的响应体
+     *
+     * @return 当前请求的响应体
+     */
+    public static HttpServletResponse currentResponse() {
+        return currentAttributes().getResponse();
+    }
+
+    /**
+     * 获取当前访问请求的浏览器标识
+     *
+     * @return 浏览器标识
+     */
+    public static String getUserAgent() {
+        return currentRequest().getHeader("User-Agent");
+    }
+
+    /**
+     * 获取当前访问请求的IP地址
+     *
+     * @return IP地址
+     */
+    public static String getRemoteAddr() {
+        return currentRequest().getRemoteAddr();
+    }
+
+    /**
+     * 获取当前访问请求的Cookie
+     *
+     * @return Cookie
+     */
+    public static Cookie[] getCookies() {
+        return currentRequest().getCookies();
+    }
+
+    public static String getRequestMethod() {
+        return currentRequest().getMethod();
     }
 
     /**
