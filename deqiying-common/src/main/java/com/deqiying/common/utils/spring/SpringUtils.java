@@ -12,6 +12,8 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -257,4 +259,13 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
         return applicationContext.getEnvironment().getRequiredProperty(key);
     }
 
+    /**
+     * 获取当前项目的资源
+     *
+     * @param resource 资源路径
+     * @return Resource 项目资源
+     */
+    public static Resource getResource(String resource) {
+        return applicationContext.getResource(ResourceLoader.CLASSPATH_URL_PREFIX + resource);
+    }
 }
