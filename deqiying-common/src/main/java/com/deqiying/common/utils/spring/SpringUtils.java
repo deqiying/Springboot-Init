@@ -52,7 +52,6 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      * @return Object 一个以所给名字注册的bean的实例
      * @throws BeansException org.springframework.beans.BeansException
      */
-    @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
         return (T) beanFactory.getBean(name);
     }
@@ -66,6 +65,17 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
         return beanFactory.getBean(clz);
+    }
+
+    /**
+     * 通过name+class获取bean
+     *
+     * @param name  beanName
+     * @param clazz bean的Class对象
+     * @return 获取到的bean
+     */
+    public static <T> T getBean(String name, Class<T> clazz) {
+        return beanFactory.getBean(name, clazz);
     }
 
     /**
