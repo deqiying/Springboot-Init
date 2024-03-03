@@ -7,11 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanExpressionException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.NonNull;
@@ -57,6 +60,47 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static ApplicationContext getApplicationContext() {
         return SpringUtils.applicationContext;
+    }
+
+    /**
+     * 获取当前 BeanFactory
+     *
+     * @return BeanFactory
+     */
+    public static ConfigurableListableBeanFactory getConfigurableListableBeanFactory() {
+        return SpringUtils.beanFactory;
+    }
+
+    /**
+     * 动态向Spring注册Bean(单例)
+     * <p>
+     * 由{@link org.springframework.beans.factory.BeanFactory} 实现，通过工具开放API
+     * <p>
+     *
+     * @param <T>      Bean类型
+     * @param beanName 名称
+     * @param bean     bean
+     */
+    public static <T> void registerBean(@NonNull String beanName, @NonNull T bean) {
+        final ConfigurableListableBeanFactory factory = getConfigurableListableBeanFactory();
+        factory.autowireBean(bean);
+        factory.registerSingleton(beanName, bean);
+    }
+
+    /**
+     * 注销bean
+     * <p>
+     * 将Spring中的bean注销，请谨慎使用
+     *
+     * @param beanName bean名称
+     */
+    public static void unregisterBean(@NonNull String beanName) {
+        final ConfigurableListableBeanFactory factory = getConfigurableListableBeanFactory();
+        if (factory instanceof DefaultSingletonBeanRegistry registry) {
+            registry.destroySingleton(beanName);
+        } else {
+            throw new BeanExpressionException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");
+        }
     }
 
     /**
@@ -291,5 +335,17 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static Resource getResource(String resource) {
         return applicationContext.getResource(ResourceLoader.CLASSPATH_URL_PREFIX + resource);
+    }
+
+    /**
+     * 发布事件
+     * Spring 4.2+ 版本事件可以不再是{@link ApplicationEvent}的子类
+     *
+     * @param event 待发布的事件
+     */
+    public static <T> void publishEvent(T event) {
+        if (null != applicationContext) {
+            applicationContext.publishEvent(event);
+        }
     }
 }
