@@ -4,6 +4,7 @@ import com.deqiying.common.utils.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -129,8 +130,60 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
         return currentRequest().getCookies();
     }
 
+    /**
+     * 获取当前访问请求的请求方式
+     *
+     * @return 当前访问请求的请求方式
+     */
     public static String getRequestMethod() {
         return currentRequest().getMethod();
+    }
+
+
+    /**
+     * 获取当前请求的会话
+     *
+     * @return 当前请求的会话
+     */
+    public static HttpSession getSession() {
+        return currentRequest().getSession();
+    }
+
+    /**
+     * 获取当前请求的访问域名
+     *
+     * @return 当前请求的访问域名
+     */
+    public static String getServerName() {
+        return currentRequest().getServerName();
+    }
+
+    /**
+     * 获取当前请求的访问端口
+     *
+     * @return 当前请求的访问端口
+     */
+    public static int getServerPort() {
+        return currentRequest().getServerPort();
+    }
+
+    /**
+     * 获取当前请求访问URL
+     * 完整URL，包括域名、端口、路径
+     *
+     * @return 当前请求访问URL
+     */
+    public static String getRequestURL() {
+        return currentRequest().getRequestURL().toString();
+    }
+
+    /**
+     * 获取当前请求访问URI路径
+     *
+     * @return 当前请求访问URI路径
+     */
+    public static String getRequestURI() {
+        return currentRequest().getRequestURI();
     }
 
     /**
