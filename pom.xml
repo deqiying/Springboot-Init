@@ -54,6 +54,12 @@
                 <artifactId>deqiying-framework</artifactId>
                 <version>${deqiying.version}</version>
             </dependency>
+            <!--    web模块    -->
+            <dependency>
+                <groupId>com.deqiying</groupId>
+                <artifactId>deqiying-web</artifactId>
+                <version>${deqiying.version}</version>
+            </dependency>
             <!-- SpringBoot的依赖配置-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
