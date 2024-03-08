@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.DefaultConnectionKeepAliveStrategy;
 import org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
@@ -18,15 +17,14 @@ import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.apache.hc.core5.util.TimeValue;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,10 +34,14 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
-@Component
-@ConditionalOnClass(value = {RestTemplate.class, CloseableHttpClient.class})
+/**
+ * HttpClient配置类
+ *
+ * @author deqiying
+ */
 @Slf4j
+@Import(HttpClientPoolConfig.class)
+@Configuration
 public class HttpClientConfig {
     @Resource
     private HttpClientPoolConfig httpClientPoolConfig;
@@ -49,6 +51,14 @@ public class HttpClientConfig {
         return new RestTemplate();
     }
 
+    /**
+     * 初始化RestTemplate,并加入spring的Bean工厂，由spring统一管理
+     */
+    @Primary
+    @Bean(name = "httpClientTemplate")
+    public RestTemplate httpClientTemplate(ClientHttpRequestFactory factory) {
+        return createRestTemplate(factory);
+    }
 
     /**
      * 创建HTTP客户端工厂
@@ -72,16 +82,6 @@ public class HttpClientConfig {
         // 从连接池获取请求连接的超时时间，不宜过长，必须设置，比如连接不够用时，时间过长将是灾难性的
         clientHttpRequestFactory.setConnectionRequestTimeout(httpClientPoolConfig.getConnectionRequestTimout());
         return clientHttpRequestFactory;
-    }
-
-
-    /**
-     * 初始化RestTemplate,并加入spring的Bean工厂，由spring统一管理
-     */
-    @Primary
-    @Bean(name = "httpClientTemplate")
-    public RestTemplate httpClientTemplate(ClientHttpRequestFactory factory) {
-        return createRestTemplate(factory);
     }
 
 

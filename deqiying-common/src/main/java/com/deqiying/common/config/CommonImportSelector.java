@@ -3,6 +3,7 @@ package com.deqiying.common.config;
 import com.deqiying.common.annotation.EnableCommon;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.lang.NonNull;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
@@ -23,9 +24,11 @@ public class CommonImportSelector implements ImportSelector {
     static {
         // 维护 EnableCommon 注解的属性对应的类名
         ALL_CONFIGURATION.put("useCommon", CommonConfiguration.class.getName());
+        ALL_CONFIGURATION.put("useHttpClient", HttpClientConfig.class.getName());
     }
 
     @Override
+    @NonNull
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         // 当存在注解 EnableCommon 时   取其useXxx 布尔值  true  导入 XxxConfiguration
         // 其它任何情况将不导入
