@@ -25,7 +25,6 @@
         <dependency>
             <groupId>com.deqiying</groupId>
             <artifactId>deqiying-common</artifactId>
-            <version>${deqiying.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
