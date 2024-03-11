@@ -1,11 +1,11 @@
 package com.deqiying.common.config;
 
 
+import com.deqiying.common.constant.Constants;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class HttpClientPoolConfig {
      */
     private int readTimeout = 20 * 1000;
 
-    private String charset = StandardCharsets.UTF_8.name();
+    private String charset = Constants.UTF8;
     /**
      * 重试次数,默认3次
      */
