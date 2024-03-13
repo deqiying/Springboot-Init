@@ -35,6 +35,15 @@ public class LocalCache<K, V> {
     }
 
     /**
+     * 获取所有缓存
+     *
+     * @return cache
+     */
+    public Map<K, V> asMap() {
+        return cache;
+    }
+
+    /**
      * 新增缓存
      *
      * @param key   键
