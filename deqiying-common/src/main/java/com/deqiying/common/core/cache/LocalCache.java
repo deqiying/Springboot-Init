@@ -1,4 +1,4 @@
-package com.deqiying.common.utils.cache;
+package com.deqiying.common.core.cache;
 
 
 import java.util.Collection;
@@ -25,11 +25,9 @@ public class LocalCache<K, V> {
     /**
      * 构造缓存对象
      *
-     * @param maxSize   缓存数量最大值
-     * @param keyType   key类型
-     * @param valueType value类型
+     * @param maxSize 缓存数量最大值
      */
-    public LocalCache(int maxSize, Class<K> keyType, Class<V> valueType) {
+    public LocalCache(int maxSize) {
         this.maxSize = maxSize;
         this.cache = new HashMap<>(maxSize);
     }
