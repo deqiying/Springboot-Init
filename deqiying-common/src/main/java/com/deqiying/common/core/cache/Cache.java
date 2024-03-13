@@ -41,7 +41,11 @@ public interface Cache<K, V> {
      * @param function 幂等的方法
      * @return 幂等的方法执行返回的值
      */
-    V compute(K k, Function<K, V> function);
+    default V compute(K k, Function<K, V> function) {
+        V value = function.apply(k);
+        put(k, value);
+        return value;
+    }
 
     /**
      * 获取缓存
