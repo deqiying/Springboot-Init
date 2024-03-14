@@ -13,19 +13,31 @@ import lombok.Data;
  */
 @Data
 public class ResultVO<T> {
-    // 状态码
+    /**
+     * 状态码
+     */
     private String code;
 
-    // 状态信息
+    /**
+     * 状态信息
+     */
     private String msg;
 
-    // 返回对象
+    /**
+     * 返回对象
+     */
     private T data;
+
+    /**
+     * 服务响应时间戳
+     */
+    private Long timestamp;
 
     public ResultVO(String code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
+        this.timestamp = System.currentTimeMillis();
     }
 
     public ResultVO() {
