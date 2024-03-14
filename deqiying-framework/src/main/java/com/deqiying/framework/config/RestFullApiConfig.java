@@ -2,7 +2,7 @@ package com.deqiying.framework.config;
 
 
 import com.deqiying.framework.advice.ControllerExceptionAdvice;
-import com.deqiying.framework.advice.ControllerResponseAdvice;
+import com.deqiying.framework.advice.RestFullApiResponseAdvice;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
  * @since 2024/1/7 2:11
  */
 @Configuration
-public class ResponseConfiguration {
+public class RestFullApiConfig {
     @Bean
-    public ControllerResponseAdvice enableControllerResponseAdvice() {
-        return new ControllerResponseAdvice();
+    public RestFullApiResponseAdvice enableControllerResponseAdvice() {
+        return new RestFullApiResponseAdvice();
     }
     @Bean
     public ControllerExceptionAdvice enableControllerExceptionAdvice() {

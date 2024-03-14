@@ -1,6 +1,6 @@
 package com.deqiying.framework.advice;
 
-import com.deqiying.framework.annotation.NotControllerResponseAdvice;
+import com.deqiying.framework.annotation.NotRestFullResponseAdvice;
 import com.deqiying.framework.enums.ResultCode;
 import com.deqiying.framework.exception.ServiceException;
 import com.deqiying.framework.vo.ResultVO;
@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @since 2024/1/7 18:03
  */
 @RestControllerAdvice
-public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
+public class RestFullApiResponseAdvice implements ResponseBodyAdvice<Object> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -32,10 +33,10 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(MethodParameter methodParameter,
-                            Class<? extends HttpMessageConverter<?>> selectedConverterType) {
+                            @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType) {
         return !(methodParameter.getParameterType().isAssignableFrom(ResultVO.class)
-                || methodParameter.hasMethodAnnotation(NotControllerResponseAdvice.class)
-                || methodParameter.getContainingClass().isAnnotationPresent(NotControllerResponseAdvice.class));
+                || methodParameter.hasMethodAnnotation(NotRestFullResponseAdvice.class)
+                || methodParameter.getContainingClass().isAnnotationPresent(NotRestFullResponseAdvice.class));
     }
 
     /**
@@ -46,14 +47,14 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType,
-                                  MediaType selectedContentType,
-                                  Class<? extends HttpMessageConverter<?>> selectedConverterType,
-                                  ServerHttpRequest request, ServerHttpResponse response) {
+                                  @NonNull MediaType selectedContentType,
+                                  @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
+                                  @NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response) {
         // String类型不能直接包装
-        if (returnType.getGenericParameterType().equals(String.class)) {
+        if (!returnType.getGenericParameterType().equals(String.class)) {
             try {
                 // 将数据包装在ResultVo里后转换为json串进行返回
-                return objectMapper.writeValueAsString(ResultVO.success(body));
+                return objectMapper.writeValueAsString(body);
             } catch (JsonProcessingException e) {
                 throw new ServiceException(ResultCode.RESPONSE_PACK_ERROR, e.getMessage());
             }

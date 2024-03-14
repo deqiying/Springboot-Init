@@ -1,11 +1,11 @@
 package com.deqiying.web;
 
 import com.deqiying.common.annotation.EnableCommon;
-import com.deqiying.framework.annotation.EnableResponse;
+import com.deqiying.framework.annotation.EnableRestFullApi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableResponse
+@EnableRestFullApi
 @EnableCommon
 @SpringBootApplication
 public class DeqiyingWebApplication {

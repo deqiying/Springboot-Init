@@ -1,6 +1,6 @@
 package com.deqiying.framework.annotation;
 
-import com.deqiying.framework.config.ResponseImportSelector;
+import com.deqiying.framework.config.RestFullApiConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(ResponseImportSelector.class)
-public  @interface EnableResponse {
-    boolean useResponse() default true;
+@Import(RestFullApiConfig.class)
+public  @interface EnableRestFullApi {
+
 }
