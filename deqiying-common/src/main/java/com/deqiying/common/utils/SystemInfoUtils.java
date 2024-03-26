@@ -1,14 +1,12 @@
 package com.deqiying.common.utils;
 
-import lombok.Getter;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
-@Getter
+@SuppressWarnings(value = {"unused"})
 public class SystemInfoUtils {
     /**
      * 当前系统属性
@@ -18,6 +16,9 @@ public class SystemInfoUtils {
     private static String ip;
 
     private static String mac;
+
+    private static String osVersion;
+    private static String osName;
 
     // 获取当前设备的ip地址
     public static String getIp() {
@@ -43,6 +44,30 @@ public class SystemInfoUtils {
             e.printStackTrace();
             return "Unknown";
         }
+    }
+
+    /**
+     * 获取当前操作系统版本号
+     *
+     * @return 当前操作系统版本号
+     */
+    public static String getOsVersion() {
+        if (SystemInfoUtils.osVersion == null) {
+            SystemInfoUtils.osVersion = props.getProperty("os.version");
+        }
+        return SystemInfoUtils.osVersion;
+    }
+
+    /**
+     * 获取当前操作系统的名称
+     *
+     * @return 当前操作系统的名称
+     */
+    public static String getOsName() {
+        if (SystemInfoUtils.osName == null) {
+            SystemInfoUtils.osName = props.getProperty("os.name");
+        }
+        return SystemInfoUtils.osName;
     }
 
     // 获取当前设备的IP地址
