@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- 基本信息 -->
+    <name>deqiying-web</name>
+    <description>deqiying-web</description>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 项目说明：web模块 -->
+    <artifactId>deqiying-web</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <!-- 继承说明：这里继承父工程 -->
+    <parent>
+        <groupId>com.deqiying</groupId>
+        <artifactId>Springboot-Init</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!--    系统模块    -->
+        <dependency>
+            <groupId>com.deqiying</groupId>
+            <artifactId>deqiying-framework</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
