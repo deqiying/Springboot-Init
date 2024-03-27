@@ -13,6 +13,8 @@ public class SystemInfoUtils {
      */
     private static final Properties props = System.getProperties();
 
+    private static final Runtime runtime = Runtime.getRuntime();
+
     private static String ip;
 
     private static String mac;
@@ -111,5 +113,38 @@ public class SystemInfoUtils {
         return "Unknown";
     }
 
+    /**
+     * 获取CPU核心数
+     *
+     * @return CPU核心数
+     */
+    public static int getCoreCount() {
+        return runtime.availableProcessors();
+    }
+
+    /**
+     * 获取 JVM 空闲内存（单位：bytes）
+     *
+     * @return 空闲内存
+     */
+    public static long getFreeMemory() {
+        return runtime.freeMemory();
+    }
+    /**
+     * 获取 JVM 试图使用的最大内存量（单位：bytes）
+     *
+     * @return 空闲内存
+     */
+    public static long getMaxMemory() {
+        return runtime.maxMemory();
+    }
+    /**
+     * 获取 JVM 内存总量（单位：bytes）
+     *
+     * @return 空闲内存
+     */
+    public static long getTotalMemory() {
+        return runtime.totalMemory();
+    }
 
 }
