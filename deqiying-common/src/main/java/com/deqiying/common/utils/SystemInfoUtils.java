@@ -1,18 +1,26 @@
 package com.deqiying.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+@Slf4j
 @SuppressWarnings(value = {"unused"})
 public class SystemInfoUtils {
     /**
      * 当前系统属性
      */
     private static final Properties props = System.getProperties();
-
+    /**
+     * 线程管理系统
+     */
+    private static final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
     private static final Runtime runtime = Runtime.getRuntime();
 
     private static String ip;
@@ -43,7 +51,7 @@ public class SystemInfoUtils {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("获取主机名失败", e);
             return "Unknown";
         }
     }
@@ -87,7 +95,7 @@ public class SystemInfoUtils {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            log.error("获取IP地址失败", e);
         }
         return "Unknown";
     }
@@ -108,7 +116,7 @@ public class SystemInfoUtils {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
+            log.error("获取MAC地址失败", e);
         }
         return "Unknown";
     }
@@ -130,6 +138,7 @@ public class SystemInfoUtils {
     public static long getFreeMemory() {
         return runtime.freeMemory();
     }
+
     /**
      * 获取 JVM 试图使用的最大内存量（单位：bytes）
      *
@@ -138,6 +147,7 @@ public class SystemInfoUtils {
     public static long getMaxMemory() {
         return runtime.maxMemory();
     }
+
     /**
      * 获取 JVM 内存总量（单位：bytes）
      *
@@ -145,6 +155,15 @@ public class SystemInfoUtils {
      */
     public static long getTotalMemory() {
         return runtime.totalMemory();
+    }
+
+    /**
+     * 获取 JVM 线程总数
+     *
+     * @return 线程总数
+     */
+    public static int getThreadCount() {
+        return threadMXBean.getThreadCount();
     }
 
 }
