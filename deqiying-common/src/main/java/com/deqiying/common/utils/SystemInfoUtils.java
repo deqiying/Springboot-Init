@@ -80,6 +80,24 @@ public class SystemInfoUtils {
         return SystemInfoUtils.osName;
     }
 
+    /**
+     * 获取当前java版本
+     *
+     * @return 当前java版本
+     */
+    public static String getJavaVersion() {
+        return props.getProperty("java.version");
+    }
+
+    /**
+     * 获取当前java安装路径
+     *
+     * @return 当前java安装路径
+     */
+    public static String getJavaHome() {
+        return props.getProperty("java.home");
+    }
+
     // 获取当前设备的IP地址
     public static String getIPAddress() {
         try {
