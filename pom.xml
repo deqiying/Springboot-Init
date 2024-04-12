@@ -38,6 +38,7 @@
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <collections4.version>4.4</collections4.version>
         <httpclient5.version>5.3.1</httpclient5.version>
+        <redisson.version>3.28.0</redisson.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -125,6 +126,11 @@
                 <groupId>org.apache.httpcomponents.client5</groupId>
                 <artifactId>httpclient5</artifactId>
                 <version>${httpclient5.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
