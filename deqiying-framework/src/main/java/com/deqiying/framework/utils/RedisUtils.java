@@ -1,5 +1,7 @@
 package com.deqiying.framework.utils;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,10 +21,14 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
 
     private static RedisTemplate redisTemplate;
+    private static RedissonClient redissonClient;
 
-    public static void init(RedisTemplate redisTemplate) {
+    public static void init(RedisTemplate redisTemplate, RedissonClient redissonClient) {
         if (RedisUtils.redisTemplate == null) {
             RedisUtils.redisTemplate = redisTemplate;
+        }
+        if (RedisUtils.redissonClient == null) {
+            RedisUtils.redissonClient = redissonClient;
         }
     }
 
@@ -231,4 +237,7 @@ public class RedisUtils {
         return redisTemplate.keys(pattern);
     }
 
+    public static RLock getLock(String key) {
+        return redissonClient.getLock(key);
+    }
 }

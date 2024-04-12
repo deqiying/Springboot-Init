@@ -1,6 +1,8 @@
 package com.deqiying.framework.config;
 
 import com.deqiying.framework.utils.RedisUtils;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -17,7 +19,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
     @Bean("redisTemplate")
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory factory){
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
         //设置key序列化
@@ -28,10 +30,17 @@ public class RedisConfig {
         template.afterPropertiesSet();
         return template;
     }
+
+    @Bean
+    @DependsOn("redissonClient")
+    public Void redisUtils(RedisTemplate<String, Object> redisTemplate, RedissonClient redissonClient) {
+        RedisUtils.init(redisTemplate, redissonClient);
+        return null;
+    }
+
     @Bean
     @DependsOn("redisTemplate")
-    public Void redisUtils(RedisTemplate<String, Object> redisTemplate){
-        RedisUtils.init(redisTemplate);
-        return null;
+    public RedissonClient redissonClient() {
+        return Redisson.create();
     }
 }
