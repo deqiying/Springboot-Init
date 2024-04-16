@@ -184,4 +184,13 @@ public class SystemInfoUtils {
         return threadMXBean.getThreadCount();
     }
 
+    /**
+     * 获取 JVM 守护线程总数
+     *
+     * @return 守护线程总数
+     */
+    public static int getActiveThreadCount() {
+        return threadMXBean.getDaemonThreadCount();
+    }
+
 }
