@@ -8,6 +8,11 @@ package com.deqiying.common.constant;
 public class Constants
 {
     /**
+     * 斜线
+     */
+    public static final String SLASH = "/";
+
+    /**
      * UTF-8 字符集
      */
     public static final String UTF8 = "UTF-8";
