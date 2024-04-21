@@ -22,6 +22,15 @@ public class HealthController {
         return "success";
     }
 
+    @GetMapping("/cache/set/{key}/{value}")
+    public String setCacheObject(@PathVariable String key, @PathVariable String value) {
+        RedisUtils.setCacheObject(key, value);
+        return value;
+    }
+    @GetMapping("/cache/get/{key}")
+    public String getCacheObject(@PathVariable String key) {
+        return RedisUtils.getCacheObject(key);
+    }
     @GetMapping("/unique/string")
     public String uniqueString() {
         RLock lock = RedisUtils.getLock(RedisKey.SYSTEM_UNIQUE_LOCK + getLastPath());

@@ -50,8 +50,8 @@ public class RestFullApiResponseAdvice implements ResponseBodyAdvice<Object> {
                                   @NonNull MediaType selectedContentType,
                                   @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   @NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response) {
-        // String类型不能直接包装
-        if (!returnType.getGenericParameterType().equals(String.class)) {
+        // String类型直接包装
+        if (String.class.equals(returnType.getGenericParameterType())) {
             try {
                 // 将数据包装在ResultVo里后转换为json串进行返回
                 return objectMapper.writeValueAsString(body);

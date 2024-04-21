@@ -20,3 +20,58 @@ spring:
       # 针对不同的网址,长连接保持的存活时间,单位s,如果是频繁而持续的请求,可以设置小一点,不建议设置过大,避免大量无用连接占用内存资源
       keepAliveTargetHost:
         www.baidu.com: 5
+  data:
+    redis:
+      host: redis.deqiying.online
+      port: 6379
+      password: "deqiying"
+      database: 0
+      lettuce:
+        pool:
+          max-idle: 16
+          max-active: 32
+          min-idle: 8
+  redisson:
+    # 单节点配置
+    singleServerConfig:
+      # 连接空闲超时，单位：毫秒
+      idleConnectionTimeout: 10000
+      # 连接超时，单位：毫秒
+      connectTimeout: 10000
+      # 命令等待超时，单位：毫秒
+      timeout: 3000
+      # 命令失败重试次数,如果尝试达到 retryAttempts（命令失败重试次数） 仍然不能将命令发送至某个指定的节点时，将抛出错误。
+      # 如果尝试在此限制之内发送成功，则开始启用 timeout（命令等待超时） 计时。
+      retryAttempts: 3
+      # 命令重试发送时间间隔，单位：毫秒
+      retryInterval: 1500
+      # 密码，没有设置密码时，需要注释掉，否则会报错
+      # password: redis.shbeta
+      # 单个连接最大订阅数量
+      subscriptionsPerConnection: 5
+      # 客户端名称
+      clientName: "axin"
+      # 节点地址
+      address: "redis://redis.deqiying.online:6379"
+      password: "deqiying"
+      # 发布和订阅连接的最小空闲连接数
+      subscriptionConnectionMinimumIdleSize: 1
+      # 发布和订阅连接池大小
+      subscriptionConnectionPoolSize: 50
+      # 最小空闲连接数
+      connectionMinimumIdleSize: 32
+      # 连接池大小
+      connectionPoolSize: 64
+      # 数据库编号
+      database: 1
+      # DNS监测时间间隔，单位：毫秒
+      dnsMonitoringInterval: 5000
+      # 线程池数量,默认值: 当前处理核数量 * 2
+      threads: 0
+      # Netty线程池数量,默认值: 当前处理核数量 * 2
+      nettyThreads: 0
+      # 编码
+      # 传输模式
+      transportMode: "NIO"
+      # 配置看门狗的默认超时时间为30s，这里改为 10s
+      lockWatchdogTimeout: 10000
