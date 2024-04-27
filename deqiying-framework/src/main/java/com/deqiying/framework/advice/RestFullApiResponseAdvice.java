@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -35,6 +36,7 @@ public class RestFullApiResponseAdvice implements ResponseBodyAdvice<Object> {
     public boolean supports(MethodParameter methodParameter,
                             @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType) {
         return !(methodParameter.getParameterType().isAssignableFrom(ResultVO.class)
+                || methodParameter.getParameterType().isAssignableFrom(ResponseEntity.class)
                 || methodParameter.hasMethodAnnotation(NotRestFullResponseAdvice.class)
                 || methodParameter.getContainingClass().isAnnotationPresent(NotRestFullResponseAdvice.class));
     }
