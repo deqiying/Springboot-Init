@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,6 +166,19 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(NullPointerException.class)
     public ResultVO<String> nullPointerException(NullPointerException e) {
         log.error("空指针异常：", e);
+        return ResultVO.error(ResultCode.SERVICE_ERROR);
+    }
+
+    /**
+     * 处理空指针的异常
+     *
+     * @param e NullPointerException
+     * @return ResultVO
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(IOException.class)
+    public ResultVO<String> ioException(IOException e) {
+        log.error("io异常：", e);
         return ResultVO.error(ResultCode.SERVICE_ERROR);
     }
 
