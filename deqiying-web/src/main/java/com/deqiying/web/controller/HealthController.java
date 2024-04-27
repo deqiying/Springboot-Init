@@ -1,10 +1,14 @@
 package com.deqiying.web.controller;
 
+import com.deqiying.common.utils.spring.SpringUtils;
 import com.deqiying.framework.utils.RedisUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/server")
@@ -20,9 +24,21 @@ public class HealthController {
         RedisUtils.setCacheObject(key, value);
         return value;
     }
+
     @GetMapping("/cache/get/{key}")
     public String getCacheObject(@PathVariable String key) {
         return RedisUtils.getCacheObject(key);
     }
 
+    @GetMapping("/download")
+    public ResponseEntity<InputStreamResource> download(@RequestParam("fileName") String fileName) throws IOException {
+        Resource resource = SpringUtils.getResource(fileName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+        headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(resource.contentLength()));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(new InputStreamResource(resource.getInputStream()));
+    }
 }
