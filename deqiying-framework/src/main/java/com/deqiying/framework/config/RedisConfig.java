@@ -27,6 +27,7 @@ public class RedisConfig {
     private String address;
     @Value("${spring.redisson.singleServerConfig.password}")
     private String password;
+
     @Bean("redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -47,7 +48,7 @@ public class RedisConfig {
         return null;
     }
 
-    @Bean
+    @Bean("redissonClient")
     @DependsOn("redisTemplate")
     public RedissonClient redissonClient() {
         Config config = new Config();

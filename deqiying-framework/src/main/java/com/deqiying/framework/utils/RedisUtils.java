@@ -237,6 +237,12 @@ public class RedisUtils {
         return redisTemplate.keys(pattern);
     }
 
+    /**
+     * 获取锁
+     *
+     * @param key 锁的key
+     * @return RLock
+     */
     public static RLock getLock(String key) {
         return redissonClient.getLock(key);
     }
