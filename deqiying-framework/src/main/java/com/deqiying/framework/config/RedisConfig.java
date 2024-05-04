@@ -27,6 +27,8 @@ public class RedisConfig {
     private String address;
     @Value("${spring.redisson.singleServerConfig.password}")
     private String password;
+    @Value("${spring.redisson.singleServerConfig.database}")
+    private Integer database;
 
     @Bean("redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory factory) {
@@ -57,7 +59,7 @@ public class RedisConfig {
         //用"redis://"来启用SSL连接
         singleServerConfig.setAddress(address)
                 .setPassword(password)
-                .setDatabase(1);
+                .setDatabase(database);
         return Redisson.create(config);
     }
 }
