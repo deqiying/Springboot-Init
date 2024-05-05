@@ -89,6 +89,30 @@ public class RedisUtils {
     }
 
     /**
+     * 根据key 获取过期时间
+     *
+     * @param key 键 不能为null
+     * @return 时间(秒) 返回0代表为永久有效
+     */
+    public static Long getExpire(final String key) {
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 判断key是否存在
+     *
+     * @param key 键
+     * @return true 存在 false不存在
+     */
+    public static Boolean hasKey(String key) {
+        try {
+            return redisTemplate.hasKey(key);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
      * 删除单个对象
      *
      * @param key Redis键
