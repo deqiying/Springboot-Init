@@ -22,6 +22,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * spring工具类 方便在非spring管理环境中获取bean
  *
@@ -238,6 +244,23 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
     }
 
     /**
+     * 获取当前访问请求的请求头
+     *
+     * @return 当前访问请求的请求头
+     */
+    public static Map<String, String> getHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        HttpServletRequest request = currentRequest();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            headers.put(headerName, headerValue);
+        }
+        return headers;
+    }
+
+    /**
      * 获取当前请求访问URL
      * 完整URL，包括域名、端口、路径
      *
@@ -254,6 +277,18 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      */
     public static String getRequestURI() {
         return currentRequest().getRequestURI();
+    }
+
+    /**
+     * 获取当前请求访问URI路径
+     * 包括请求参数
+     *
+     * @return 当前请求访问URI路径
+     */
+    public static String getRequestURIWithQueryString() {
+        String queryString = currentRequest().getQueryString();
+        return currentRequest().getRequestURI() +
+                (StringUtils.isBlank(queryString) ? "" : "?" + URLDecoder.decode(queryString, StandardCharsets.UTF_8));
     }
 
     /**
