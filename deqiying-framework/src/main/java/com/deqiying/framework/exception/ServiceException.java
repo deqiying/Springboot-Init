@@ -28,6 +28,12 @@ public class ServiceException extends RuntimeException implements StatusCode {
     public ServiceException() {
     }
 
+    public ServiceException(StatusCode statusCode, Throwable cause) {
+        super(cause);
+        this.code = statusCode.getCode();
+        this.msg = statusCode.getMsg();
+    }
+
     public ServiceException(StatusCode statusCode, String message) {
         // message用于用户设置抛出错误详情
         super(message);
