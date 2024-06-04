@@ -1,7 +1,9 @@
 package com.deqiying.common.utils;
 
+import java.util.Map;
 import java.util.Random;
 
+@SuppressWarnings(value = {"unused"})
 public class ProbabilityUtils {
     private static final Random random = new Random();
 
@@ -41,5 +43,19 @@ public class ProbabilityUtils {
         return random.nextInt(10000) < numerator;
     }
 
+    public static <T> T randomElement(Map<T,Integer> map){
+        int sum = 0;
+        for (int value : map.values()) {
+            sum += value;
+        }
+        int randomValue = random.nextInt(sum);
+        for (Map.Entry<T, Integer> entry : map.entrySet()) {
+            randomValue -= entry.getValue();
+            if (randomValue < 0) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
 }
