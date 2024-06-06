@@ -1,6 +1,34 @@
 # 关于这个项目
 这是一个Springboot项目的初始化模板，包含了一些常用的工具类、基类、网络请求等。
-### 模块说明
+
+## 项目技术
+- JDK 17
+- Springboot 3.x
+- Lombok
+- Redis
+
+## 项目结构
+```
+Springboot-Init
+├── deqiying-common
+│   ├── annotation
+│   ├── config
+│   ├── constant
+│   ├── core
+│   ├── utils
+├── deqiying-framework
+│   ├── advice
+│   ├── annotation
+│   ├── config
+│   ├── enums
+│   ├── exception
+│   ├── interfaces
+│   ├── utils
+│   ├── vo
+├── deqiying-web
+│   ├── controller
+```
+## 模块说明
 #### common
 包含了一些常用的工具类，如：时间工具类、字符串工具类、网络请求工具类等。
 同时声明了一些常用的bean，如：网络请求工具RestTemplate、Spring上下文工具类SpringUtils等。
