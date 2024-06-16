@@ -1,5 +1,6 @@
 package com.deqiying.common.utils;
 
+import java.util.Map;
 import java.util.Random;
 
 public class ProbabilityUtils {
@@ -41,5 +42,23 @@ public class ProbabilityUtils {
         return random.nextInt(10000) < numerator;
     }
 
-
+    /**
+     * 根据权重随机获取一个元素
+     *
+     * @param map key为元素，value为权重
+     * @param <T> 元素类型
+     * @return 随机获取的元素
+     */
+    public static <T> T random(Map<T, Integer> map) {
+        int sum = map.values().stream().mapToInt(Integer::intValue).sum();
+        int randomNum = random.nextInt(sum);
+        int current = 0;
+        for (Map.Entry<T, Integer> entry : map.entrySet()) {
+            current += entry.getValue();
+            if (randomNum < current) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 }
