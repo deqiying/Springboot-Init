@@ -1,8 +1,8 @@
 package com.deqiying.common.utils;
 
-import java.util.Map;
 import java.util.Random;
 
+@SuppressWarnings(value = {"unused"})
 public class ProbabilityUtils {
     private static final Random random = new Random();
 
