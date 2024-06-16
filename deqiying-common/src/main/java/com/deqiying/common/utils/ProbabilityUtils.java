@@ -1,5 +1,6 @@
 package com.deqiying.common.utils;
 
+import java.util.Map;
 import java.util.Random;
 
 @SuppressWarnings(value = {"unused"})
@@ -49,7 +50,7 @@ public class ProbabilityUtils {
      * @param <T> 元素类型
      * @return 随机获取的元素
      */
-    public static <T> T random(Map<T, Integer> map) {
+    public static <T> T randomElement(Map<T, Integer> map) {
         int sum = map.values().stream().mapToInt(Integer::intValue).sum();
         int randomNum = random.nextInt(sum);
         int current = 0;
