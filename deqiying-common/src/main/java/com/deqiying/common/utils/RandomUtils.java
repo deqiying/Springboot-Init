@@ -9,6 +9,7 @@ import java.util.Random;
  */
 public class RandomUtils {
 
+    private static final Random random = new Random();
     /**
      * 生成指定长度的随机数字字符串
      *
@@ -19,9 +20,7 @@ public class RandomUtils {
         if (length <= 0) {
             throw new IllegalArgumentException("length must be positive");
         }
-        Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
-
         for (int i = 0; i < length; i++) {
             int digit = random.nextInt(10); // 生成0-9之间的随机数
             sb.append(digit);
