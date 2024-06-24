@@ -1,6 +1,7 @@
 package com.deqiying.common.config;
 
 import com.deqiying.common.annotation.EnableCommon;
+import com.deqiying.common.utils.toy.IoGameBanner;
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.lang.NonNull;
@@ -25,6 +26,8 @@ public class CommonImportSelector implements ImportSelector {
         // 维护 EnableCommon 注解的属性对应的类名
         ALL_CONFIGURATION.put("useCommon", CommonConfiguration.class.getName());
         ALL_CONFIGURATION.put("useHttpClient", HttpClientConfig.class.getName());
+        IoGameBanner.render();
+        IoGameBanner.me().countDown();
     }
 
     @Override
