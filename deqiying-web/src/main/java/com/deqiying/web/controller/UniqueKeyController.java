@@ -17,11 +17,15 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/server/unique")
 public class UniqueKeyController {
+
+    private static final long WAIT_TIME = 1200;
+    private static final long LEASE_TIME = 500;
+
     @GetMapping("/string")
     public String uniqueString() {
         RLock lock = RedisUtils.getLock(RedisKey.SYSTEM_UNIQUE_LOCK + getLastPath());
         try {
-            if (lock.tryLock(1200, 500, TimeUnit.MILLISECONDS)) {
+            if (lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.MILLISECONDS)) {
                 return SnowFlakeUtils.nextId26();
             }
             return null;
@@ -36,7 +40,7 @@ public class UniqueKeyController {
     public Long nextId() {
         RLock lock = RedisUtils.getLock(RedisKey.SYSTEM_UNIQUE_LOCK + getLastPath());
         try {
-            if (lock.tryLock(1200, 500, TimeUnit.MILLISECONDS)) {
+            if (lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.MILLISECONDS)) {
                 return SnowFlakeUtils.nextId();
             }
             return null;
@@ -51,7 +55,7 @@ public class UniqueKeyController {
     public String nextId16() {
         RLock lock = RedisUtils.getLock(RedisKey.SYSTEM_UNIQUE_LOCK + getLastPath());
         try {
-            if (lock.tryLock(1200, 500, TimeUnit.MILLISECONDS)) {
+            if (lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.MILLISECONDS)) {
                 return SnowFlakeUtils.nextId16();
             }
             return null;
@@ -66,7 +70,7 @@ public class UniqueKeyController {
     public String nextId(@PathVariable Integer radix) {
         RLock lock = RedisUtils.getLock(RedisKey.SYSTEM_UNIQUE_LOCK + getLastPath());
         try {
-            if (lock.tryLock(1200, 500, TimeUnit.MILLISECONDS)) {
+            if (lock.tryLock(WAIT_TIME, LEASE_TIME, TimeUnit.MILLISECONDS)) {
                 return SnowFlakeUtils.nextId(radix);
             }
             return null;
