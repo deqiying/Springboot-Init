@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @author maozheming
- * @date 2024-06-12
  * 过滤器类要使用的签名工具类
  */
 public class RequestSignUtil {
@@ -20,12 +18,12 @@ public class RequestSignUtil {
     public static String decryptSign(HttpServletRequest request, ServletResponse servletResponse) {
         String sign = request.getHeader("sign");
         if (!StringUtils.hasText(sign)) {
-//            FilterClassUtil.printWriter(servletResponse, "sign错误");
+            FilterClassUtil.printWriter(servletResponse, "sign错误");
             return null;
         }
         String md5Str;
         try {
-//            md5Str = RSAUtil.decrypt(sign, MangaImgTranslateConstant.RSA_PRIVATE_KEY);
+            md5Str = RSAUtil.decrypt(sign, "key");
             md5Str = "";
         } catch (Throwable e) {
             FilterClassUtil.printWriter(servletResponse, "sign错误");

@@ -12,7 +12,6 @@ import java.io.IOException;
 
 
 /**
- * @author maozheming
  * @date 2024-05-13
  * 漫画翻译接口过滤器
  */
