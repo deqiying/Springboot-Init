@@ -22,8 +22,7 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
     public CachedBodyHttpServletRequest(HttpServletRequest request) throws IOException {
         super(request);
-        InputStream requestInputStream = request.getInputStream();
-        this.cachedBody = toByteArray(requestInputStream);
+        this.cachedBody = toByteArray(request.getInputStream());
     }
 
     @Override
@@ -33,8 +32,7 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
     @Override
     public BufferedReader getReader() {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.cachedBody);
-        return new BufferedReader(new InputStreamReader(byteArrayInputStream));
+        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(this.cachedBody)));
     }
 
     private byte[] toByteArray(InputStream input) throws IOException {
