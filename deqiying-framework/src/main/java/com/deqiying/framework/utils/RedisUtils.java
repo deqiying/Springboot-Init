@@ -261,6 +261,91 @@ public class RedisUtils {
         return redisTemplate.keys(pattern);
     }
 
+
+    /**
+     * 获取锁 - 默认过期时间5分钟
+     *
+     * @param lockKey   锁的键
+     * @param requestId 请求标识，用于识别持有锁的线程
+     * @return true表示获取锁成功，false表示获取锁失败
+     */
+    public static boolean lock(String lockKey, String requestId) {
+        return lock(lockKey, requestId, 5, TimeUnit.MINUTES);
+    }
+
+
+    /**
+     * 获取锁
+     *
+     * @param lockKey    锁的键
+     * @param requestId  请求标识，用于识别持有锁的线程
+     * @param expireTime 锁的过期时间，单位为毫秒
+     * @return true表示获取锁成功，false表示获取锁失败
+     */
+    public static boolean lock(String lockKey, String requestId, long expireTime) {
+        return lock(lockKey, requestId, expireTime, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * 获取锁
+     *
+     * @param lockKey    锁的键
+     * @param requestId  请求标识，用于识别持有锁的线程
+     * @param expireTime 锁的过期时间
+     * @param timeUnit   时间单位
+     * @return true表示获取锁成功，false表示获取锁失败
+     */
+    public static boolean lock(String lockKey, String requestId, long expireTime, TimeUnit timeUnit) {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(lockKey, requestId, expireTime, timeUnit));
+    }
+
+    /**
+     * 释放锁
+     *
+     * @param lockKey   锁的键
+     * @param requestId 请求标识，用于校验释放锁的合法性
+     */
+    public static void unlock(String lockKey, String requestId) {
+        // 获取当前锁的持有者
+        String value = getCacheObject(lockKey);
+        // 如果当前请求标识与锁的持有者一致，则删除锁
+        if (value != null && value.equals(requestId)) {
+            redisTemplate.delete(lockKey);
+        }
+    }
+
+    /**
+     * 检测锁是否被占用
+     *
+     * @param lockKey 锁的键
+     * @return true表示锁被占用，false表示锁未被占用
+     */
+    public static boolean isLocked(String lockKey) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(lockKey));
+    }
+
+    /**
+     * 获取锁的剩余过期时间
+     *
+     * @param lockKey 锁的键
+     * @return 剩余的过期时间（以秒为单位），如果锁不存在则返回-1
+     */
+    public static long getLockRemainingTime(String lockKey) {
+        return getLockRemainingTime(lockKey, TimeUnit.SECONDS);
+    }
+
+
+    /**
+     * 获取锁的剩余过期时间
+     *
+     * @param lockKey 锁的键
+     * @return 剩余的过期时间（以秒为单位），如果锁不存在则返回-1
+     */
+    public static long getLockRemainingTime(String lockKey, TimeUnit timeUnit) {
+        Long expire = redisTemplate.getExpire(lockKey, timeUnit);
+        return expire != null ? expire : -1;
+    }
+
     /**
      * 获取锁
      *
