@@ -215,6 +215,14 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
         return currentRequest().getMethod();
     }
 
+    /**
+     * 获取当前请求的访问协议
+     *
+     * @return 当前请求的访问协议
+     */
+    public static String getRequestScheme() {
+        return currentRequest().getScheme();
+    }
 
     /**
      * 获取当前请求的会话
