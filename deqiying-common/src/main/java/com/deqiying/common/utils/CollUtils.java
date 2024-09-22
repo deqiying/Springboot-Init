@@ -95,4 +95,20 @@ public class CollUtils {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 随机打乱集合
+     *
+     * @param list 原集合
+     * @param <T>  泛型
+     * @return 打乱后的新集合
+     */
+    public static <T> List<T> shuffle(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<T> newlist = new ArrayList<>(list);
+        Collections.shuffle(newlist);
+        return newlist;
+    }
+
 }
