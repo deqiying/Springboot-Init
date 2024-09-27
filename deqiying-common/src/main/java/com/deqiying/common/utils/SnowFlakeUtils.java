@@ -11,7 +11,7 @@ public class SnowFlakeUtils {
     public static SnowFlake snowFlake;
 
     static {
-        snowFlake = new SnowFlake(1, 1);
+        snowFlake = new SnowFlake(RandomUtils.randomInt(0, 31), RandomUtils.randomInt(0, 31));
     }
 
     /**

@@ -28,4 +28,15 @@ public class RandomUtils {
         return sb.toString();
     }
 
+    /**
+     * 生成指定范围内的随机整数
+     *
+     * @param min 最小值（包含）
+     * @param max 最大值（包含）
+     * @return 随机整数
+     */
+    public static int randomInt(int min, int max) {
+        return random.nextInt(max - min + 1) + min;
+    }
+
 }
