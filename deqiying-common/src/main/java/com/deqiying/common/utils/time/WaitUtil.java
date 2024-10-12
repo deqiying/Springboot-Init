@@ -23,9 +23,10 @@ public class WaitUtil {
      * 重复尝试次数
      *
      * @param waitCondition 等待条件
+     * @return true: 等待条件满足，false: 等待条件不满足
      */
-    public static void waitForCondition(Supplier<Boolean> waitCondition) {
-        waitForCondition(waitCondition, DEFAULT_WAIT_COUNT, DEFAULT_WAIT_TIME_UNIT, DEFAULT_WAIT_TIME);
+    public static boolean waitForCondition(Supplier<Boolean> waitCondition) {
+        return waitForCondition(waitCondition, DEFAULT_WAIT_COUNT, DEFAULT_WAIT_TIME_UNIT, DEFAULT_WAIT_TIME);
     }
 
     /**
@@ -34,9 +35,10 @@ public class WaitUtil {
      *
      * @param waitCondition 等待条件
      * @param retryCount    重复尝试次数
+     * @return true: 等待条件满足，false: 等待条件不满足
      */
-    public static void waitForCondition(Supplier<Boolean> waitCondition, int retryCount) {
-        waitForCondition(waitCondition, retryCount, DEFAULT_WAIT_TIME_UNIT, DEFAULT_WAIT_TIME);
+    public static boolean waitForCondition(Supplier<Boolean> waitCondition, int retryCount) {
+        return waitForCondition(waitCondition, retryCount, DEFAULT_WAIT_TIME_UNIT, DEFAULT_WAIT_TIME);
     }
 
     /**
@@ -46,9 +48,10 @@ public class WaitUtil {
      * @param waitCondition 等待条件
      * @param timeUnit      等待时间单位
      * @param waitTime      等待时间
+     * @return true: 等待条件满足，false: 等待条件不满足
      */
-    public static void waitForCondition(Supplier<Boolean> waitCondition, TimeUnit timeUnit, int waitTime) {
-        waitForCondition(waitCondition, DEFAULT_WAIT_COUNT, timeUnit, waitTime);
+    public static boolean waitForCondition(Supplier<Boolean> waitCondition, TimeUnit timeUnit, int waitTime) {
+        return waitForCondition(waitCondition, DEFAULT_WAIT_COUNT, timeUnit, waitTime);
     }
 
     /**
@@ -60,12 +63,16 @@ public class WaitUtil {
      * @param retryCount    重复尝试次数
      * @param timeUnit      等待时间单位
      * @param waitTime      等待时间
+     * @return true: 等待条件满足，false: 等待条件不满足
      */
-    public static void waitForCondition(Supplier<Boolean> waitCondition, int retryCount, TimeUnit timeUnit, int waitTime) {
+    public static boolean waitForCondition(Supplier<Boolean> waitCondition, int retryCount, TimeUnit timeUnit, int waitTime) {
         try {
-            while (waitCondition.get() && retryCount-- > 0) {
+            boolean isWait = waitCondition.get();
+            while (isWait && retryCount-- > 0) {
                 timeUnit.sleep(waitTime);
+                isWait = waitCondition.get();
             }
+            return isWait;
         } catch (Throwable throwable) {
             log.error("waitForCondition | wait for condition occur error! error = ", throwable);
             throw new RuntimeException("wait for condition occur error!");
