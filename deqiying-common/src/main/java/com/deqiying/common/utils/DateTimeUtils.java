@@ -14,6 +14,7 @@ import java.util.List;
  *
  * @author qiying
  */
+@SuppressWarnings("unused")
 public class DateTimeUtils {
     /**
      * 时间格式常量
@@ -29,6 +30,8 @@ public class DateTimeUtils {
     public static final String CN_SHORT_PATTERN = "yyyy年MM月dd日";
     public static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     public static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+    private static final String[] DATE_FORMATS = {COMMON_PATTERN, COMMON_PATTERN_TYPE2, SHORT_PATTERN, SHORT_PATTERN_TYPE2, LONG_PATTERN, SUP_SHORT_PATTERN, SUP_LONG_PATTERN, YEAR_MONTH, CN_SHORT_PATTERN};
 
     public static String formatDateTime(DateTime dateTime) {
         return dateTime.toString("yyyy-MM-dd HH:mm:ss");
@@ -72,6 +75,27 @@ public class DateTimeUtils {
      */
     public static DateTime parseByDateTimeStr(String dateTimeStr) {
         return DateTime.parse(dateTimeStr, DATE_TIME_FORMATTER);
+    }
+
+    /**
+     * 根据时间字符串解析时间
+     *
+     * @param dateTimeStr 时间字符串
+     * @return 时间
+     */
+    public static DateTime parseDateTime(String dateTimeStr) {
+        DateTime parse = null;
+        for (String dateFormat : DATE_FORMATS) {
+            try {
+                parse = DateTime.parse(dateTimeStr, DateTimeFormat.forPattern(dateFormat));
+                if (parse != null) {
+                    return parse;
+                }
+            } catch (Exception ignore) {
+
+            }
+        }
+        return parse;
     }
 
     /**
