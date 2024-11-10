@@ -215,6 +215,27 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
+     * 截取字符串
+     *
+     * @param str    字符串
+     * @param length 截取的长度
+     * @return 结果
+     */
+    public static String subLength(final String str, int length) {
+        if (str == null || str.isEmpty()) {
+            return NULL_STR;
+        }
+
+        while (length < 0) {
+            length = str.length() + length;
+        }
+        if (length > str.length()) {
+            length = str.length();
+        }
+        return str.substring(0, length);
+    }
+
+    /**
      * 格式化文本, {} 表示占位符<br>
      * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
      * 如果想输出 {} 使用 \\转义 { 即可，如果想输出 {} 之前的 \ 使用双转义符 \\\\ 即可<br>
