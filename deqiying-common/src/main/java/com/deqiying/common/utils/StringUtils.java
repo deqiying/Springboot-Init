@@ -24,6 +24,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static final char SEPARATOR = '_';
 
     /**
+     * 正则表达式，用于匹配需要移除的字符（特殊符号、颜文字等）
+     */
+    private static final String REGEX_REMOVE = "[^a-zA-Z0-9\\u4e00-\\u9fa5]";
+
+
+    /**
      * 获取参数不为空值
      *
      * @param value defaultValue 要判断的value
@@ -548,5 +554,21 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             sb.append(String.valueOf(c).repeat(Math.max(0, size)));
         }
         return sb.toString();
+    }
+
+
+
+    /**
+     * 清理字符串特殊字符：移除特殊符号、颜文字和空格
+     *
+     * @param original 原始字符串
+     * @return 清理后的名称
+     */
+    public static String cleanSpecialCharacters(String original) {
+        if (original == null || original.isEmpty()) {
+            return "";
+        }
+        // 移除特殊符号、颜文字和空格
+        return original.replaceAll(REGEX_REMOVE, "");
     }
 }
