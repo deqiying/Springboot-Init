@@ -571,4 +571,27 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         // 移除特殊符号、颜文字和空格
         return original.replaceAll(REGEX_REMOVE, "");
     }
+
+    /**
+     * 分割字符串，支持多个分隔符
+     *
+     * @param str        原始字符串
+     * @param delimiters 分隔符列表
+     * @return 分割后的字符串列表
+     */
+    public static List<String> split(CharSequence str, String... delimiters) {
+        if (delimiters.length == 0) {
+            return Collections.emptyList();
+        }
+        if (str == null) {
+            return Collections.emptyList();
+        }
+        // 将多个分隔符拼接成正则表达式
+        String regex = Arrays.stream(delimiters)
+                .filter(Objects::nonNull)
+                .map(d -> "\\" + d) // 转义正则特殊字符
+                .reduce((a, b) -> a + "|" + b)
+                .orElse("");
+        return Arrays.asList(str.toString().split(regex));
+    }
 }
