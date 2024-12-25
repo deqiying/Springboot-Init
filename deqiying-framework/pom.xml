@@ -39,6 +39,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>${springboot.version}</version>
+        </dependency>
         <!-- 操作Redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
