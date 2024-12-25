@@ -27,13 +27,8 @@ public class LambdaUtil {
      * @throws Throwable 可能发生的异常
      */
     public static <T> Function<T, ?> getLambdaGetter(Class<T> clazz, String prop) throws Throwable {
-        PropertyDescriptor[] beanGetters;
-        if (cache.containsKey(clazz)) {
-            beanGetters = cache.get(clazz);
-        } else {
-            beanGetters = ReflectUtils.getBeanGetters(clazz);
-            cache.put(clazz, beanGetters);
-        }
+        PropertyDescriptor[] beanGetters = cache.computeIfAbsent(clazz,
+                k -> ReflectUtils.getBeanGetters(clazz));
         var lookup = MethodHandles.lookup();
         var optional = Arrays.stream(beanGetters)
                 .filter(pd -> pd.getName().equals(prop))
