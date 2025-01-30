@@ -39,4 +39,26 @@ public class RandomUtils {
         return random.nextInt(max - min + 1) + min;
     }
 
+    /**
+     * 生成指定长度的随机字符串
+     *
+     * @param length 随机字符串的长度
+     * @return 随机字符串
+     */
+    public static String randomString(int length) {
+        if (length <= 0) {
+            throw new IllegalArgumentException("length must be positive");
+        }
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int digit = random.nextInt(36); // 生成0-35之间的随机数
+            char c = (char) ('a' + digit);
+            if (digit < 10) {
+                c = (char) ('0' + digit);
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
 }
