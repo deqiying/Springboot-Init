@@ -171,4 +171,24 @@ public class CollUtils {
         return !isEmpty(map);
     }
 
+    /**
+     * 判断队列是否为空
+     *
+     * @param queue 队列
+     * @return 是否为空
+     */
+    public static boolean isNotEmpty(Queue<?> queue) {
+        return !isEmpty(queue);
+    }
+
+    /**
+     * 判断队列是否为空
+     *
+     * @param queue 队列
+     * @return 是否为空
+     */
+
+    public static boolean isEmpty(Queue<?> queue) {
+        return queue == null || queue.isEmpty();
+    }
 }
