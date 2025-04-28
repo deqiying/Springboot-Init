@@ -24,6 +24,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static final char SEPARATOR = '_';
 
     /**
+     * 填充限制
+     */
+    private static final int PAD_LIMIT = 8192;
+
+    /**
      * 正则表达式，用于匹配需要移除的字符（特殊符号、颜文字等）
      */
     private static final String REGEX_REMOVE = "[^a-zA-Z0-9\\u4e00-\\u9fa5]";
@@ -594,4 +599,36 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
                 .orElse("");
         return Arrays.asList(str.toString().split(regex));
     }
+
+    public static String rightPad(final String str, final int size, String padStr) {
+        if (str == null) {
+            return null;
+        }
+        if (isEmpty(padStr)) {
+            padStr = SPACE;
+        }
+        final int padLen = padStr.length();
+        final int strLen = str.length();
+        final int pads = size - strLen;
+        if (pads <= 0) {
+            return str; // returns original String when possible
+        }
+        if (padLen == 1 && pads <= PAD_LIMIT) {
+            return rightPad(str, size, padStr.charAt(0));
+        }
+
+        if (pads == padLen) {
+            return str.concat(padStr);
+        }
+        if (pads < padLen) {
+            return str.concat(padStr.substring(0, pads));
+        }
+        final char[] padding = new char[pads];
+        final char[] padChars = padStr.toCharArray();
+        for (int i = 0; i < pads; i++) {
+            padding[i] = padChars[i % padLen];
+        }
+        return str.concat(new String(padding));
+    }
+
 }
