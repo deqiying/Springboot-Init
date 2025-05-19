@@ -187,8 +187,33 @@ public class CollUtils {
      * @param queue 队列
      * @return 是否为空
      */
-
     public static boolean isEmpty(Queue<?> queue) {
         return queue == null || queue.isEmpty();
+    }
+
+    /**
+     * 新增元素，并且忽略空的元素
+     *
+     * @param collection 集合
+     * @param object     元素
+     * @param <T>        泛型
+     * @return 是否新增成功
+     */
+    public static <T> boolean addIgnoreNull(final Collection<T> collection, final T object) {
+        if (collection == null) {
+            throw new NullPointerException("The collection must not be null");
+        }
+        return object != null && collection.add(object);
+    }
+
+    /**
+     * 返回一个不为null的集合，如果集合本身不为null，则返回集合本身
+     *
+     * @param collection 集合
+     * @param <T>        泛型
+     * @return 集合
+     */
+    public static <T> Collection<T> emptyIfNull(final Collection<T> collection) {
+        return collection == null ? Collections.emptyList() : collection;
     }
 }
