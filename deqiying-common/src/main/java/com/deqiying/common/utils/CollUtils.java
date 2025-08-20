@@ -216,4 +216,8 @@ public class CollUtils {
     public static <T> Collection<T> emptyIfNull(final Collection<T> collection) {
         return collection == null ? Collections.emptyList() : collection;
     }
+
+    public static <T> Collection<T> removeNull(final Collection<T> collection){
+        return collection == null ? Collections.emptyList() : collection.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    }
 }
