@@ -217,7 +217,17 @@ public class CollUtils {
         return collection == null ? Collections.emptyList() : collection;
     }
 
+    /**
+     *  移除 null 元素
+     * @param collection 集合
+     * @return 集合
+     * @param <T> 泛型
+     */
     public static <T> Collection<T> removeNull(final Collection<T> collection){
-        return collection == null ? Collections.emptyList() : collection.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        if(collection == null){
+            return null;
+        }
+        collection.removeIf(Objects::isNull);
+        return collection;
     }
 }
