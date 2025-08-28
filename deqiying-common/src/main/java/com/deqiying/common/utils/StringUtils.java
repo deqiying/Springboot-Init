@@ -37,7 +37,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /**
      * 获取参数不为空值
      *
-     * @param value defaultValue 要判断的value
+     * @param value 要判断的value
+     * @param defaultValue 默认值
      * @return value 返回值
      */
     public static <T> T nvl(T value, T defaultValue) {
@@ -45,7 +46,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个Collection是否为空， 包含List，Set，Queue
+     * 判断一个Collection是否为空， 包含List，Set，Queue
      *
      * @param coll 要判断的Collection
      * @return true：为空 false：非空
@@ -55,7 +56,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个Collection是否非空，包含List，Set，Queue
+     * 判断一个Collection是否非空，包含List，Set，Queue
      *
      * @param coll 要判断的Collection
      * @return true：非空 false：空
@@ -65,17 +66,17 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个对象数组是否为空
+     * 判断一个对象数组是否为空
      *
      * @param objects 要判断的对象数组
-     *                * @return true：为空 false：非空
+     * @return true：为空 false：非空
      */
     public static boolean isEmpty(Object[] objects) {
         return isNull(objects) || (objects.length == 0);
     }
 
     /**
-     * * 判断一个对象数组是否非空
+     * 判断一个对象数组是否非空
      *
      * @param objects 要判断的对象数组
      * @return true：非空 false：空
@@ -85,7 +86,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个Map是否为空
+     * 判断一个Map是否为空
      *
      * @param map 要判断的Map
      * @return true：为空 false：非空
@@ -95,7 +96,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个Map是否为空
+     * 判断一个Map是否为空
      *
      * @param map 要判断的Map
      * @return true：非空 false：空
@@ -105,7 +106,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个字符串是否为空串
+     * 判断一个字符串是否为空串
      *
      * @param str String
      * @return true：为空 false：非空
@@ -115,7 +116,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个字符串是否为非空串
+     * 判断一个字符串是否为非空串
      *
      * @param str String
      * @return true：非空串 false：空串
@@ -125,7 +126,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个对象是否为空
+     * 判断一个对象是否为空
      *
      * @param object Object
      * @return true：为空 false：非空
@@ -135,7 +136,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个对象是否非空
+     * 判断一个对象是否非空
      *
      * @param object Object
      * @return true：非空 false：空
@@ -145,7 +146,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * * 判断一个对象是否是数组类型（Java基本型别的数组）
+     * 判断一个对象是否是数组类型（Java基本型别的数组）
      *
      * @param object 对象
      * @return true：是数组 false：不是数组
@@ -237,7 +238,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return NULL_STR;
         }
 
-        while (length < 0) {
+        if (length < 0) {
             length = str.length() + length;
         }
         if (length > str.length()) {
