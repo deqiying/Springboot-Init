@@ -460,6 +460,31 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
+     * 将下划线命名转换为驼峰命名
+     *
+     * @param str 下划线命名字符串
+     * @return 驼峰命名字符串
+     */
+    public static String underscoreToCamelCase(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        StringBuilder result = new StringBuilder();
+        boolean capitalizeNext = false;
+        for (char c : str.toCharArray()) {
+            if (c == '_') {
+                capitalizeNext = true;
+            } else if (capitalizeNext) {
+                result.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+            } else {
+                result.append(Character.toLowerCase(c));
+            }
+        }
+        return result.toString();
+    }
+
+    /**
      * 驼峰式命名法
      * 例如：user_name->userName
      */
