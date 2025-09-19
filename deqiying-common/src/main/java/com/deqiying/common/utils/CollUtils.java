@@ -230,4 +230,169 @@ public class CollUtils {
         collection.removeIf(Objects::isNull);
         return collection;
     }
+
+    /**
+     * 对集合进行映射转换（map），返回一个新的列表
+     *
+     * @param source 源集合
+     * @param mapper 映射函数
+     * @param <T>    源元素类型
+     * @param <R>    目标元素类型
+     * @return 转换后的列表（当 source 为 null 时返回空列表）
+     */
+    public static <T, R> List<R> map(Collection<T> source, java.util.function.Function<? super T, ? extends R> mapper) {
+        if (source == null || source.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Objects.requireNonNull(mapper, "mapper 不能为 null");
+        return source.stream().map(mapper).collect(Collectors.toList());
+    }
+
+    /**
+     * 过滤集合（filter），返回一个新的列表
+     *
+     * @param source    源集合
+     * @param predicate 过滤条件
+     * @param <T>       元素类型
+     * @return 过滤后的列表（当 source 为 null 时返回空列表）
+     */
+    public static <T> List<T> filter(Collection<T> source, java.util.function.Predicate<? super T> predicate) {
+        if (source == null || source.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Objects.requireNonNull(predicate, "predicate 不能为 null");
+        return source.stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据 key 提取函数分组
+     *
+     * @param source        源集合
+     * @param keyExtractor  键提取函数
+     * @param <T>           元素类型
+     * @param <K>           键类型
+     * @return Map 分组结果（当 source 为 null 时返回空 Map）
+     */
+    public static <T, K> Map<K, List<T>> groupBy(Collection<T> source, java.util.function.Function<? super T, ? extends K> keyExtractor) {
+        if (source == null || source.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Objects.requireNonNull(keyExtractor, "keyExtractor 不能为 null");
+        return source.stream().collect(Collectors.groupingBy(keyExtractor));
+    }
+
+    /**
+     * 将集合转换为 Map（键唯一），值为元素本身
+     *
+     * @param source       源集合
+     * @param keyExtractor 键提取函数（必须唯一）
+     * @param <T>          元素类型
+     * @param <K>          键类型
+     * @return Map 结果（当 source 为 null 时返回空 Map）
+     * @throws IllegalStateException 当出现重复键时抛出异常
+     */
+    public static <T, K> Map<K, T> toMapUnique(Collection<T> source, java.util.function.Function<? super T, ? extends K> keyExtractor) {
+        if (source == null || source.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        Objects.requireNonNull(keyExtractor, "keyExtractor 不能为 null");
+        return source.stream().collect(Collectors.toMap(keyExtractor, java.util.function.Function.identity(), (a, b) -> {
+            throw new IllegalStateException("存在重复键: " + a);
+        }));
+    }
+
+    /**
+     * 根据 key 去重，保留第一次出现的元素
+     *
+     * @param source       源集合
+     * @param keyExtractor 键提取函数
+     * @param <T>          元素类型
+     * @param <K>          键类型
+     * @return 去重后的列表（当 source 为 null 时返回空列表）
+     */
+    public static <T, K> List<T> distinctByKey(Collection<T> source, java.util.function.Function<? super T, ? extends K> keyExtractor) {
+        if (source == null || source.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Objects.requireNonNull(keyExtractor, "keyExtractor 不能为 null");
+        Set<K> seen = new HashSet<>();
+        return source.stream()
+                .filter(t -> seen.add(keyExtractor.apply(t)))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取集合的第一个元素
+     *
+     * @param collection 集合
+     * @param <T>        元素类型
+     * @return 第一个元素；当集合为空或为 null 时返回 null
+     */
+    public static <T> T firstOrNull(Collection<T> collection) {
+        if (collection == null || collection.isEmpty()) {
+            return null;
+        }
+        if (collection instanceof List) {
+            return ((List<T>) collection).get(0);
+        }
+        return collection.iterator().next();
+    }
+
+    /**
+     * 获取集合的最后一个元素
+     *
+     * @param collection 集合
+     * @param <T>        元素类型
+     * @return 最后一个元素；当集合为空或为 null 时返回 null
+     */
+    public static <T> T lastOrNull(Collection<T> collection) {
+        if (collection == null || collection.isEmpty()) {
+            return null;
+        }
+        if (collection instanceof List) {
+            List<T> list = (List<T>) collection;
+            return list.get(list.size() - 1);
+        }
+        T last = null;
+        for (T t : collection) {
+            last = t;
+        }
+        return last;
+    }
+
+    /**
+     * 安全获取集合大小
+     *
+     * @param collection 集合
+     * @return 集合大小（当 collection 为 null 时返回 0）
+     */
+    public static int safeSize(Collection<?> collection) {
+        return collection == null ? 0 : collection.size();
+    }
+
+    /**
+     * 判断两个集合是否存在交集
+     *
+     * @param a 集合 A
+     * @param b 集合 B
+     * @return 是否存在任意相同元素
+     */
+    public static boolean containsAny(Collection<?> a, Collection<?> b) {
+        if (isEmpty(a) || isEmpty(b)) {
+            return false;
+        }
+        if (a.size() > b.size()) {
+            // 交换，减少空间
+            Collection<?> tmp = a;
+            a = b;
+            b = tmp;
+        }
+        Set<?> set = new HashSet<>(b);
+        for (Object o : a) {
+            if (set.contains(o)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
