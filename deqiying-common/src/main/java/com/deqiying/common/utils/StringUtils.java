@@ -686,4 +686,172 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return new String(newCodePoints, 0, outOffset);
     }
 
+    // ========================= 新增常用方法 =========================
+
+    /**
+     * 当字符串为 null、空串或仅空白时，返回默认值
+     *
+     * @param str         原字符串
+     * @param defaultStr  默认值
+     * @return 非空白字符串
+     */
+    public static String defaultIfBlank(final String str, final String defaultStr) {
+        return isBlank(str) ? defaultStr : str;
+    }
+
+    /**
+     * 将 null 转为空串 ""
+     *
+     * @param str 原字符串
+     * @return 非 null 字符串
+     */
+    public static String nullToEmpty(final String str) {
+        return str == null ? "" : str;
+    }
+
+    /**
+     * 将空串或仅空白的字符串转换为 null
+     *
+     * @param str 原字符串
+     * @return 若为空白则返回 null，否则原字符串
+     */
+    public static String emptyToNull(final String str) {
+        return isBlank(str) ? null : str;
+    }
+
+    /**
+     * 安全去除两端空白字符（输入为 null 时返回 null）
+     *
+     * @param str 原字符串
+     * @return 去除空白后的字符串或 null
+     */
+    public static String safeTrim(final String str) {
+        return str == null ? null : str.trim();
+    }
+
+    /**
+     * 使用分隔符连接可迭代对象
+     *
+     * @param iterable  可迭代对象
+     * @param delimiter 分隔符
+     * @return 连接后的字符串（iterable 或元素全为空时返回空串）
+     */
+    public static String join(final Iterable<?> iterable, final String delimiter) {
+        if (iterable == null) {
+            return "";
+        }
+        String actualDelimiter = delimiter == null ? "" : delimiter;
+        StringBuilder sb = new StringBuilder();
+        Iterator<?> it = iterable.iterator();
+        while (it.hasNext()) {
+            Object next = it.next();
+            if (next != null) {
+                sb.append(next);
+            }
+            if (it.hasNext()) {
+                sb.append(actualDelimiter);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 是否等于任意一个（忽略大小写）
+     *
+     * @param str   原字符串
+     * @param array 候选数组
+     * @return 是否匹配
+     */
+    public static boolean equalsAnyIgnoreCase(final String str, final String... array) {
+        if (array == null) {
+            return false;
+        }
+        for (String s : array) {
+            if (equalsIgnoreCase(str, s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否以任意一个前缀开头（忽略大小写）
+     *
+     * @param str    原字符串
+     * @param prefixes 前缀数组
+     * @return 是否匹配
+     */
+    public static boolean startsWithAnyIgnoreCase(final String str, final String... prefixes) {
+        if (str == null || prefixes == null || prefixes.length == 0) {
+            return false;
+        }
+        for (String p : prefixes) {
+            if (p != null && startsWithIgnoreCase(str, p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 超长省略显示（结尾使用省略号 ...）
+     *
+     * @param str   原字符串
+     * @param maxLen 最大保留长度（必须 >= 0）
+     * @return 处理后的字符串
+     */
+    public static String abbreviateWithEllipsis(final String str, final int maxLen) {
+        if (str == null) {
+            return null;
+        }
+        if (maxLen < 0) {
+            throw new IllegalArgumentException("maxLen 不能小于 0");
+        }
+        if (str.length() <= maxLen) {
+            return str;
+        }
+        if (maxLen <= 3) {
+            // 不足放置完整省略号，直接截断
+            return str.substring(0, maxLen);
+        }
+        return str.substring(0, maxLen - 3) + "...";
+    }
+
+    /**
+     * 左侧补齐（别名：padStart）
+     *
+     * @param str  原字符串
+     * @param size 目标长度
+     * @param padChar 补齐字符
+     * @return 处理后的字符串
+     */
+    public static String padStart(final String str, final int size, final char padChar) {
+        return leftPad(str, size, padChar);
+    }
+
+    /**
+     * 右侧补齐（别名：padEnd）
+     *
+     * @param str  原字符串
+     * @param size 目标长度
+     * @param padChar 补齐字符
+     * @return 处理后的字符串
+     */
+    public static String padEnd(final String str, final int size, final char padChar) {
+        return rightPad(str, size, padChar);
+    }
+
+    /**
+     * 移除 Emoji 与非常见符号，仅保留中文、英文字母与数字
+     *
+     * @param str 原字符串
+     * @return 清理后的字符串（null 输入返回空串）
+     */
+    public static String removeEmojiAndSymbols(final String str) {
+        if (str == null || str.isEmpty()) {
+            return "";
+        }
+        return str.replaceAll(REGEX_REMOVE, "");
+    }
+
 }
