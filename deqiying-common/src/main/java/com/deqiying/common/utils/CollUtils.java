@@ -395,4 +395,37 @@ public class CollUtils {
         }
         return false;
     }
+
+    /**
+     * 扁平化嵌套集合，将嵌套的集合展开为单层集合
+     *
+     * @param nested 嵌套集合
+     * @param <T>    元素类型
+     * @return 扁平化后的列表（当 nested 为 null 时返回空列表）
+     */
+    public static <T> List<T> flatten(Collection<? extends Collection<T>> nested) {
+        if (nested == null || nested.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return nested.stream()
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 反转集合顺序，返回一个新的反序列表
+     *
+     * @param collection 原集合
+     * @param <T>        元素类型
+     * @return 反转后的新列表（当 collection 为 null 时返回空列表）
+     */
+    public static <T> List<T> reverse(Collection<T> collection) {
+        if (collection == null || collection.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<T> result = new ArrayList<>(collection);
+        Collections.reverse(result);
+        return result;
+    }
 }
