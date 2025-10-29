@@ -5,6 +5,7 @@ import com.deqiying.common.core.text.StrFormatter;
 import org.springframework.util.AntPathMatcher;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 字符串工具类
@@ -853,5 +854,170 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
         return str.replaceAll(REGEX_REMOVE, "");
     }
+
+    // ============ 追加的常用方法开始 ============
+
+    /**
+     * 使用分隔符连接数组
+     *
+     * @param array     数组
+     * @param delimiter 分隔符
+     * @return 连接后的字符串
+     */
+    public static String join(final Object[] array, final String delimiter) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+        String actualDelimiter = delimiter == null ? "" : delimiter;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            Object o = array[i];
+            if (o != null) {
+                sb.append(o);
+            }
+            if (i < array.length - 1) {
+                sb.append(actualDelimiter);
+            }
+        }
+        return sb.toString();
+    }
+
+
+    // -------------- UUID 与随机字符串 --------------
+
+    /**
+     * 生成标准 UUID（含连字符）
+     */
+    public static String uuid() {
+        return java.util.UUID.randomUUID().toString();
+    }
+
+    /**
+     * 生成简化 UUID（去除连字符）
+     */
+    public static String simpleUuid() {
+        return uuid().replace("-", "");
+    }
+
+    /**
+     * 生成随机字母串（大小写）
+     */
+    public static String randomAlphabetic(int length) {
+        if (length <= 0) return "";
+        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder(length);
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        for (int i = 0; i < length; i++) {
+            sb.append(letters.charAt(r.nextInt(letters.length())));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 生成随机字母数字串
+     */
+    public static String randomAlphanumeric(int length) {
+        if (length <= 0) return "";
+        String chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder(length);
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        for (int i = 0; i < length; i++) {
+            sb.append(chars.charAt(r.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+
+    // -------------- 数值判断与解析 --------------
+
+    /**
+     * 是否为整数（可带正负号）
+     */
+    public static boolean isInteger(final String str) {
+        if (isBlank(str)) {
+            return false;
+        }
+        return str.matches("^[+-]?\\d+$");
+    }
+
+    /**
+     * 是否为小数/浮点数（可带正负号）
+     */
+    public static boolean isDecimal(final String str) {
+        if (isBlank(str)) {
+            return false;
+        }
+        return str.matches("^[+-]?\\d+(\\.\\d+)?$");
+    }
+
+    /**
+     * 安全转换为 int，失败返回默认值
+     */
+    public static int toInt(final String str, final int defaultVal) {
+        if (isBlank(str)) {
+            return defaultVal;
+        }
+        try {
+            return Integer.parseInt(str.trim());
+        } catch (Exception e) {
+            return defaultVal;
+        }
+    }
+
+    /**
+     * 安全转换为 long，失败返回默认值
+     */
+    public static long toLong(final String str, final long defaultVal) {
+        if (isBlank(str)) {
+            return defaultVal;
+        }
+        try {
+            return Long.parseLong(str.trim());
+        } catch (Exception e) {
+            return defaultVal;
+        }
+    }
+
+    /**
+     * 安全转换为 double，失败返回默认值
+     */
+    public static double toDouble(final String str, final double defaultVal) {
+        if (isBlank(str)) {
+            return defaultVal;
+        }
+        try {
+            return Double.parseDouble(str.trim());
+        } catch (Exception e) {
+            return defaultVal;
+        }
+    }
+
+    // -------------- 统计与规范化 --------------
+
+    /**
+     * 统计子串在字符串中出现的次数（不重叠）
+     */
+    public static int countOccurrences(final String str, final String sub) {
+        if (isEmpty(str) || isEmpty(sub)) {
+            return 0;
+        }
+        int count = 0;
+        int fromIndex = 0;
+        while (true) {
+            int idx = str.indexOf(sub, fromIndex);
+            if (idx == -1) break;
+            count++;
+            fromIndex = idx + sub.length();
+        }
+        return count;
+    }
+
+    /**
+     * 归一化空白字符：压缩连续空白为单个空格，并去掉首尾空白
+     */
+    public static String normalizeWhitespace(final String str) {
+        if (str == null) return null;
+        return str.trim().replaceAll("\\s+", " ");
+    }
+
 
 }
