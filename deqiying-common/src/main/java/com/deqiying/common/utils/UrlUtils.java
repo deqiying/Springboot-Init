@@ -54,16 +54,17 @@ public class UrlUtils {
      * @throws Exception 如果URL无效或请求失败
      */
     public static byte[] downloadUrl(String url) throws Exception {
-        try (InputStream inputStream = openUrl(url);
-             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            // 缓冲区
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            return outputStream.toByteArray();
-        }
+//        try (InputStream inputStream = openUrl(url);
+//             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+//            // 缓冲区
+//            byte[] buffer = new byte[8192];
+//            int bytesRead;
+//            while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                outputStream.write(buffer, 0, bytesRead);
+//            }
+//            return outputStream.toByteArray();
+//        }
+        return null;
     }
 
     /**
