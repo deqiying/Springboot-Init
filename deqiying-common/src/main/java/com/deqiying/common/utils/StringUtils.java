@@ -6,6 +6,7 @@ import org.springframework.util.AntPathMatcher;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类
@@ -18,6 +19,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 空字符串
      */
     private static final String NULL_STR = "";
+
+    /**
+     * AntPathMatcher 实例复用，避免重复创建
+     */
+    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
     /**
      * 下划线
@@ -107,13 +113,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * 判断一个字符串是否为空串
+     * 判断一个字符串是否为空串（包含仅空白字符的情况）
      *
      * @param str String
      * @return true：为空 false：非空
      */
     public static boolean isEmpty(String str) {
-        return isNull(str) || NULL_STR.equals(str.trim());
+        // 使用 isBlank 避免 trim() 创建临时对象
+        return str == null || str.isBlank();
     }
 
     /**
@@ -193,8 +200,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 截取字符串
      *
      * @param str   字符串
-     * @param start 开始
-     * @param end   结束
+     * @param start 开始（支持负数，表示从末尾倒数）
+     * @param end   结束（支持负数，表示从末尾倒数）
      * @return 结果
      */
     public static String substring(final String str, int start, int end) {
@@ -202,26 +209,22 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return NULL_STR;
         }
 
-        if (end < 0) {
-            end = str.length() + end;
-        }
+        int len = str.length();
+
+        // 处理负数索引
         if (start < 0) {
-            start = str.length() + start;
+            start = Math.max(0, len + start);
+        }
+        if (end < 0) {
+            end = Math.max(0, len + end);
         }
 
-        if (end > str.length()) {
-            end = str.length();
-        }
+        // 边界修正
+        start = Math.min(start, len);
+        end = Math.min(end, len);
 
         if (start > end) {
             return NULL_STR;
-        }
-
-        if (start < 0) {
-            start = 0;
-        }
-        if (end < 0) {
-            end = 0;
         }
 
         return str.substring(start, end);
@@ -299,24 +302,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return list集合
      */
     public static List<String> str2List(String str, String sep, boolean filterBlank, boolean trim) {
-        List<String> list = new ArrayList<>();
+        // isEmpty 已包含 isBlank 检查，无需重复判断
         if (StringUtils.isEmpty(str)) {
-            return list;
+            return new ArrayList<>();
         }
 
-        // 过滤空白字符串
-        if (filterBlank && StringUtils.isBlank(str)) {
-            return list;
-        }
         String[] split = str.split(sep);
+        List<String> list = new ArrayList<>(split.length);
         for (String string : split) {
             if (filterBlank && StringUtils.isBlank(string)) {
                 continue;
             }
-            if (trim) {
-                string = string.trim();
-            }
-            list.add(string);
+            list.add(trim ? string.trim() : string);
         }
 
         return list;
@@ -361,36 +358,30 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 驼峰转下划线命名
+     * 例如：userName -> user_name, XMLParser -> xml_parser
      */
     public static String toUnderScoreCase(String str) {
-        if (str == null) {
-            return null;
+        if (str == null || str.isEmpty()) {
+            return str;
         }
-        StringBuilder sb = new StringBuilder();
-        // 前置字符是否大写
-        boolean preCharIsUpperCase;
-        // 当前字符是否大写
-        boolean curreCharIsUpperCase;
-        // 下一字符是否大写
-        boolean nexteCharIsUpperCase = true;
-        for (int i = 0; i < str.length(); i++) {
+
+        int len = str.length();
+        StringBuilder sb = new StringBuilder(len + len / 2);
+
+        for (int i = 0; i < len; i++) {
             char c = str.charAt(i);
-            if (i > 0) {
-                preCharIsUpperCase = Character.isUpperCase(str.charAt(i - 1));
-            } else {
-                preCharIsUpperCase = false;
-            }
+            boolean isUpperCase = Character.isUpperCase(c);
 
-            curreCharIsUpperCase = Character.isUpperCase(c);
+            if (isUpperCase && i > 0) {
+                boolean prevIsLower = Character.isLowerCase(str.charAt(i - 1));
+                boolean nextIsLower = (i < len - 1) && Character.isLowerCase(str.charAt(i + 1));
 
-            if (i < (str.length() - 1)) {
-                nexteCharIsUpperCase = Character.isUpperCase(str.charAt(i + 1));
-            }
-
-            if (preCharIsUpperCase && curreCharIsUpperCase && !nexteCharIsUpperCase) {
-                sb.append(SEPARATOR);
-            } else if ((i != 0 && !preCharIsUpperCase) && curreCharIsUpperCase) {
-                sb.append(SEPARATOR);
+                // 在大写字母前添加下划线的条件：
+                // 1. 前一个字符是小写（如 userName 中的 N）
+                // 2. 当前是连续大写的最后一个且后面是小写（如 XMLParser 中的 L）
+                if (prevIsLower || nextIsLower) {
+                    sb.append(SEPARATOR);
+                }
             }
             sb.append(Character.toLowerCase(c));
         }
@@ -486,32 +477,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
-     * 驼峰式命名法
-     * 例如：user_name->userName
+     * 驼峰式命名法（小驼峰）
+     * 例如：user_name -> userName
+     * 功能与 {@link #underscoreToCamelCase(String)} 相同
+     *
+     * @see #underscoreToCamelCase(String)
      */
     public static String toCamelCase(String s) {
-        if (s == null) {
-            return null;
-        }
-        if (s.indexOf(SEPARATOR) == -1) {
-            return s;
-        }
-        s = s.toLowerCase();
-        StringBuilder sb = new StringBuilder(s.length());
-        boolean upperCase = false;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-
-            if (c == SEPARATOR) {
-                upperCase = true;
-            } else if (upperCase) {
-                sb.append(Character.toUpperCase(c));
-                upperCase = false;
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
+        return underscoreToCamelCase(s);
     }
 
     /**
@@ -544,8 +517,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 匹配结果
      */
     public static boolean isMatch(String pattern, String url) {
-        AntPathMatcher matcher = new AntPathMatcher();
-        return matcher.match(pattern, url);
+        // 复用静态 AntPathMatcher 实例，避免重复创建对象
+        return ANT_PATH_MATCHER.match(pattern, url);
     }
 
     @SuppressWarnings("unchecked")
@@ -611,18 +584,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 分割后的字符串列表
      */
     public static List<String> split(CharSequence str, String... delimiters) {
-        if (delimiters.length == 0) {
+        if (str == null || delimiters == null || delimiters.length == 0) {
             return Collections.emptyList();
         }
-        if (str == null) {
-            return Collections.emptyList();
-        }
-        // 将多个分隔符拼接成正则表达式
+        // 将多个分隔符拼接成正则表达式，使用 Pattern.quote 正确转义
         String regex = Arrays.stream(delimiters)
                 .filter(Objects::nonNull)
-                .map(d -> "\\" + d) // 转义正则特殊字符
+                .filter(d -> !d.isEmpty())
+                .map(Pattern::quote)
                 .reduce((a, b) -> a + "|" + b)
                 .orElse("");
+        if (regex.isEmpty()) {
+            return Collections.singletonList(str.toString());
+        }
         return Arrays.asList(str.toString().split(regex));
     }
 
@@ -669,20 +643,21 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
 
         final int strLen = str.length();
-        final int[] newCodePoints = new int[strLen]; // cannot be longer than the char array
+        final int[] newCodePoints = new int[strLen];
         int outOffset = 0;
         for (int i = 0; i < strLen; ) {
-            final int oldCodepoint = str.codePointAt(i);
+            final int oldCodePoint = str.codePointAt(i);
             final int newCodePoint;
-            if (Character.isUpperCase(oldCodepoint) || Character.isTitleCase(oldCodepoint)) {
-                newCodePoint = Character.toLowerCase(oldCodepoint);
-            } else if (Character.isLowerCase(oldCodepoint)) {
-                newCodePoint = Character.toUpperCase(oldCodepoint);
+            if (Character.isUpperCase(oldCodePoint) || Character.isTitleCase(oldCodePoint)) {
+                newCodePoint = Character.toLowerCase(oldCodePoint);
+            } else if (Character.isLowerCase(oldCodePoint)) {
+                newCodePoint = Character.toUpperCase(oldCodePoint);
             } else {
-                newCodePoint = oldCodepoint;
+                newCodePoint = oldCodePoint;
             }
             newCodePoints[outOffset++] = newCodePoint;
-            i += Character.charCount(newCodePoint);
+            // 使用原始码点计算字符数，而非转换后的码点
+            i += Character.charCount(oldCodePoint);
         }
         return new String(newCodePoints, 0, outOffset);
     }
@@ -743,15 +718,15 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
         String actualDelimiter = delimiter == null ? "" : delimiter;
         StringBuilder sb = new StringBuilder();
-        Iterator<?> it = iterable.iterator();
-        while (it.hasNext()) {
-            Object next = it.next();
+        boolean first = true;
+        for (Object next : iterable) {
+            if (!first) {
+                sb.append(actualDelimiter);
+            }
             if (next != null) {
                 sb.append(next);
             }
-            if (it.hasNext()) {
-                sb.append(actualDelimiter);
-            }
+            first = false;
         }
         return sb.toString();
     }
@@ -844,15 +819,14 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 移除 Emoji 与非常见符号，仅保留中文、英文字母与数字
+     * 功能与 {@link #cleanSpecialCharacters(String)} 相同
      *
      * @param str 原字符串
      * @return 清理后的字符串（null 输入返回空串）
+     * @see #cleanSpecialCharacters(String)
      */
     public static String removeEmojiAndSymbols(final String str) {
-        if (str == null || str.isEmpty()) {
-            return "";
-        }
-        return str.replaceAll(REGEX_REMOVE, "");
+        return cleanSpecialCharacters(str);
     }
 
     // ============ 追加的常用方法开始 ============
@@ -868,18 +842,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (array == null || array.length == 0) {
             return "";
         }
-        String actualDelimiter = delimiter == null ? "" : delimiter;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < array.length; i++) {
-            Object o = array[i];
-            if (o != null) {
-                sb.append(o);
-            }
-            if (i < array.length - 1) {
-                sb.append(actualDelimiter);
-            }
-        }
-        return sb.toString();
+        // 复用 Iterable 版本的 join 方法
+        return join(Arrays.asList(array), delimiter);
     }
 
 
