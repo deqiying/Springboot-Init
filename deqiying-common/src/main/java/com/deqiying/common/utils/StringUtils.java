@@ -40,6 +40,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     private static final String REGEX_REMOVE = "[^a-zA-Z0-9\\u4e00-\\u9fa5]";
 
+    // ========== 预编译的 Pattern，避免在热点方法中重复编译 ==========
+    private static final Pattern REMOVE_PATTERN = Pattern.compile(REGEX_REMOVE);
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
+    private static final Pattern INTEGER_PATTERN = Pattern.compile("^[+-]?\\d+$");
+    private static final Pattern DECIMAL_PATTERN = Pattern.compile("^[+-]?\\d+(\\.\\d+)?$");
+    private static final Pattern NUMERIC_PATTERN = Pattern.compile("^\\d+$");
+
 
     /**
      * 获取参数不为空值
@@ -307,7 +314,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return new ArrayList<>();
         }
 
-        String[] split = str.split(sep);
+        if (sep == null || sep.isEmpty()) {
+            // 不指定分隔符，返回原字符串作为单元素
+            return new ArrayList<>(Collections.singletonList(trim ? str.trim() : str));
+        }
+
+        // 使用 Pattern.quote 确保分隔符按字面含义分割（避免被当作正则）
+        String[] split = str.split(Pattern.quote(sep));
         List<String> list = new ArrayList<>(split.length);
         for (String string : split) {
             if (filterBlank && StringUtils.isBlank(string)) {
@@ -415,8 +428,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 截取后的字符串
      */
     public static String lastStringDel(String str, String spit) {
-        if (!StringUtils.isEmpty(str) && str.endsWith(spit)) {
-            return str.subSequence(0, str.length() - 1).toString();
+        if (!StringUtils.isEmpty(str) && spit != null && !spit.isEmpty() && str.endsWith(spit)) {
+            // 修复：之前只删除了最后一个字符，应该删除 spit 的长度
+            return str.substring(0, str.length() - spit.length());
         }
         return str;
     }
@@ -572,8 +586,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (original == null || original.isEmpty()) {
             return "";
         }
-        // 移除特殊符号、颜文字和空格
-        return original.replaceAll(REGEX_REMOVE, "");
+        // 使用预编译的 Pattern 避免每次调用都编译正则
+        return REMOVE_PATTERN.matcher(original).replaceAll("");
     }
 
     /**
@@ -817,18 +831,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return rightPad(str, size, padChar);
     }
 
-    /**
-     * 移除 Emoji 与非常见符号，仅保留中文、英文字母与数字
-     * 功能与 {@link #cleanSpecialCharacters(String)} 相同
-     *
-     * @param str 原字符串
-     * @return 清理后的字符串（null 输入返回空串）
-     * @see #cleanSpecialCharacters(String)
-     */
-    public static String removeEmojiAndSymbols(final String str) {
-        return cleanSpecialCharacters(str);
-    }
-
     // ============ 追加的常用方法开始 ============
 
     /**
@@ -909,7 +911,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (isBlank(str)) {
             return false;
         }
-        return str.matches("^[+-]?\\d+$");
+        // 使用预编译 Pattern
+        return INTEGER_PATTERN.matcher(str).matches();
     }
 
     /**
@@ -922,7 +925,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (isBlank(str)) {
             return false;
         }
-        return str.matches("^[+-]?\\d+(\\.\\d+)?$");
+        return DECIMAL_PATTERN.matcher(str).matches();
     }
 
     /**
@@ -1011,67 +1014,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String normalizeWhitespace(final String str) {
         if (str == null) return null;
-        return str.trim().replaceAll("\\s+", " ");
-    }
-
-    // -------------- 新增实用方法 --------------
-
-    /**
-     * 判断字符串是否为纯数字（不包含正负号、小数点）
-     *
-     * @param str 待判断的字符串
-     * @return true：是纯数字 false：不是纯数字
-     */
-    public static boolean isNumeric(final String str) {
-        if (isBlank(str)) {
-            return false;
-        }
-        return str.matches("^\\d+$");
-    }
-
-    /**
-     * 首字母转大写
-     *
-     * @param str 原字符串
-     * @return 首字母大写的字符串
-     */
-    public static String capitalizeFirst(final String str) {
-        if (isEmpty(str)) {
-            return str;
-        }
-        if (str.length() == 1) {
-            return str.toUpperCase();
-        }
-        return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-    }
-
-    /**
-     * 首字母转小写
-     *
-     * @param str 原字符串
-     * @return 首字母小写的字符串
-     */
-    public static String uncapitalizeFirst(final String str) {
-        if (isEmpty(str)) {
-            return str;
-        }
-        if (str.length() == 1) {
-            return str.toLowerCase();
-        }
-        return Character.toLowerCase(str.charAt(0)) + str.substring(1);
-    }
-
-    /**
-     * 反转字符串
-     *
-     * @param str 原字符串
-     * @return 反转后的字符串
-     */
-    public static String reverse(final String str) {
-        if (str == null) {
-            return null;
-        }
-        return new StringBuilder(str).reverse().toString();
+        // 使用预编译 Pattern 提高性能
+        return WHITESPACE_PATTERN.matcher(str.trim()).replaceAll(" ");
     }
 
     /**
@@ -1084,134 +1028,27 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (str == null) {
             return null;
         }
-        return str.replaceAll("\\s+", "");
+        return WHITESPACE_PATTERN.matcher(str).replaceAll("");
     }
 
     /**
-     * 判断字符串是否以任意一个后缀结尾
+     * 判断字符串是否为回文串（忽略大小写和非字母数字字符）
      *
-     * @param str 原字符串
-     * @param suffixes 后缀数组
-     * @return true：以任意后缀结尾 false：不以任何后缀结尾
+     * @param str 待判断的字符串
+     * @return true：是回文 false：不是
      */
-    public static boolean endsWithAny(final String str, final String... suffixes) {
-        if (str == null || suffixes == null || suffixes.length == 0) {
-            return false;
-        }
-        for (String suffix : suffixes) {
-            if (suffix != null && str.endsWith(suffix)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断字符串是否以任意一个后缀结尾（忽略大小写）
-     *
-     * @param str 原字符串
-     * @param suffixes 后缀数组
-     * @return true：以任意后缀结尾 false：不以任何后缀结尾
-     */
-    public static boolean endsWithAnyIgnoreCase(final String str, final String... suffixes) {
-        if (str == null || suffixes == null || suffixes.length == 0) {
-            return false;
-        }
-        for (String suffix : suffixes) {
-            if (suffix != null && endsWithIgnoreCase(str, suffix)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 重复字符串 n 次
-     *
-     * @param str 原字符串
-     * @param count 重复次数
-     * @return 重复后的字符串
-     */
-    public static String repeat(final String str, final int count) {
-        if (str == null) {
-            return null;
-        }
-        if (count <= 0) {
-            return "";
-        }
-        if (count == 1) {
-            return str;
-        }
-        return str.repeat(count);
-    }
-
-    /**
-     * 安全的字符串比较（处理 null 情况）
-     *
-     * @param str1 字符串1
-     * @param str2 字符串2
-     * @return 比较结果：负数表示 str1 < str2，0 表示相等，正数表示 str1 > str2
-     */
-    public static int compareNullSafe(final String str1, final String str2) {
-        if (str1 == str2) {
-            return 0;
-        }
-        if (str1 == null) {
-            return -1;
-        }
-        if (str2 == null) {
-            return 1;
-        }
-        return str1.compareTo(str2);
-    }
-
-    /**
-     * 字符串脱敏处理（中间部分用星号替换）
-     *
-     * @param str 原字符串
-     * @param prefixLen 保留前面字符的长度
-     * @param suffixLen 保留后面字符的长度
-     * @return 脱敏后的字符串
-     */
-    public static String desensitize(final String str, final int prefixLen, final int suffixLen) {
+    public static boolean isPalindrome(final String str) {
         if (isEmpty(str)) {
-            return str;
+            return true;
         }
-        int len = str.length();
-        if (len <= prefixLen + suffixLen) {
-            return str;
+        String cleaned = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        int len = cleaned.length();
+        for (int i = 0; i < len / 2; i++) {
+            if (cleaned.charAt(i) != cleaned.charAt(len - 1 - i)) {
+                return false;
+            }
         }
-        String prefix = str.substring(0, prefixLen);
-        String suffix = str.substring(len - suffixLen);
-        int maskLen = len - prefixLen - suffixLen;
-        return prefix + "*".repeat(maskLen) + suffix;
+        return true;
     }
-
-    /**
-     * 电话号码脱敏（保留前3位和后4位）
-     *
-     * @param phone 电话号码
-     * @return 脱敏后的电话号码
-     */
-    public static String desensitizePhone(final String phone) {
-        if (isEmpty(phone) || phone.length() < 7) {
-            return phone;
-        }
-        return desensitize(phone, 3, 4);
-    }
-
-    /**
-     * 身份证号脱敏（保留前6位和后4位）
-     *
-     * @param idCard 身份证号
-     * @return 脱敏后的身份证号
-     */
-    public static String desensitizeIdCard(final String idCard) {
-        if (isEmpty(idCard) || idCard.length() < 10) {
-            return idCard;
-        }
-        return desensitize(idCard, 6, 4);
-    }
-
 
 }
