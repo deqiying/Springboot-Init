@@ -1051,4 +1051,49 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return true;
     }
 
+    /**
+     * 字符串脱敏（掩码处理）
+     * 例如：mask("13812345678", 3, 4, '*') -> 138****5678
+     *
+     * @param str      原字符串
+     * @param prefix   前缀保留长度
+     * @param suffix   后缀保留长度
+     * @param maskChar 掩码字符
+     * @return 脱敏后的字符串
+     */
+    public static String mask(final String str, int prefix, int suffix, char maskChar) {
+        if (isEmpty(str)) {
+            return str;
+        }
+        int len = str.length();
+        if (prefix < 0 || suffix < 0 || prefix + suffix >= len) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(len);
+        sb.append(str, 0, prefix);
+        for (int i = 0; i < len - prefix - suffix; i++) {
+            sb.append(maskChar);
+        }
+        sb.append(str, len - suffix, len);
+        return sb.toString();
+    }
+
+    /**
+     * 首字母小写
+     *
+     * @param str 字符串
+     * @return 首字母小写后的字符串
+     */
+    public static String uncapitalize(final String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0) {
+            return str;
+        }
+        char firstChar = str.charAt(0);
+        if (Character.isLowerCase(firstChar)) {
+            return str;
+        }
+        return Character.toLowerCase(firstChar) + str.substring(1);
+    }
+
 }
